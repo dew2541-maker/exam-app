@@ -1,0 +1,4863 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="พิชิตสนามสอบ">
+<meta name="description" content="แผนอ่านหนังสือพิชิตสนามสอบ">
+<link rel="manifest" href="#" id="manifest-link">
+<title>📚 พิชิตสนามสอบ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #6c63ff;
+    --primary-dark: #4a3fcf;
+    --primary-light: #9d97ff;
+    --accent: #ff6584;
+    --accent2: #43e97b;
+    --bg: #f0f2ff;
+    --sidebar: #1a1a2e;
+    --sidebar-hover: #16213e;
+    --sidebar-active: #0f3460;
+    --card: #ffffff;
+    --text: #2d2d4e;
+    --text-muted: #7b7b9d;
+    --border: #e0e0f0;
+    --success: #43e97b;
+    --warning: #f9ca24;
+    --danger: #ff6b6b;
+    --shadow: 0 4px 24px rgba(108,99,255,0.10);
+    --sidebar-width: 260px;
+    --radius: 14px;
+    --font: 'Sarabun', sans-serif;
+    --font-head: 'Kanit', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== SIDEBAR ===== */
+  #sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    overflow-y: auto;
+  }
+
+  #sidebar.hidden { transform: translateX(-100%); }
+
+  .sidebar-header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-logo {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sidebar-logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .sidebar-subtitle {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 4px;
+    margin-left: 48px;
+  }
+
+  /* CLOCK in sidebar - as nav item */
+  .sidebar-clock-nav {
+    padding: 10px 20px 14px;
+    border-left: 3px solid rgba(108,99,255,0.5);
+    background: rgba(108,99,255,0.08);
+    margin: 4px 0;
+  }
+
+  .clock-time {
+    font-family: var(--font-head);
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+
+  .clock-date {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+  }
+
+  .clock-countdown {
+    margin-top: 8px;
+    background: rgba(108,99,255,0.3);
+    border-radius: 8px;
+    padding: 6px 10px;
+  }
+
+  .clock-countdown-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 1px;
+  }
+
+  .clock-countdown-days {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-light);
+  }
+
+  .clock-countdown-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* NAV */
+  nav { flex: 1; padding: 12px 0; }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 20px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 0;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+  }
+
+  .nav-item:hover {
+    background: var(--sidebar-hover);
+    color: #fff;
+  }
+
+  .nav-item.active {
+    background: var(--sidebar-active);
+    color: #fff;
+    border-left-color: var(--primary);
+  }
+
+  .nav-icon {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--primary);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  #main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-height: 100vh;
+    transition: margin-left 0.3s;
+  }
+
+  #main.full { margin-left: 0; }
+
+  /* Top bar */
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 2px 12px rgba(108,99,255,0.06);
+  }
+
+  .topbar-toggle {
+    width: 38px; height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-size: 18px;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .topbar-toggle:hover { background: var(--bg); }
+
+  .topbar-title {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .topbar-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: var(--primary-dark); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+  }
+
+  .btn-outline:hover { background: var(--primary); color: #fff; }
+
+  .btn-danger {
+    background: var(--danger);
+    color: #fff;
+  }
+
+  .btn-success {
+    background: var(--success);
+    color: #fff;
+  }
+
+  .btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
+  /* PAGE */
+  .page { display: none; padding: 24px; }
+  .page.active { display: block; }
+
+  /* ===== DASHBOARD ===== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stat-value {
+    font-family: var(--font-head);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 4px 0 0;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* EXAM INFO BANNER */
+  .exam-banner {
+    background: linear-gradient(135deg, var(--sidebar), #0f3460);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    color: #fff;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exam-banner::before {
+    content: '🎯';
+    position: absolute;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: 0.08;
+  }
+
+  .exam-banner-title {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .exam-banner-sub {
+    font-size: 14px;
+    opacity: 0.75;
+  }
+
+  .exam-banner-days {
+    text-align: right;
+  }
+
+  .exam-days-num {
+    font-family: var(--font-head);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--primary-light);
+    line-height: 1;
+  }
+
+  .exam-days-label {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+
+  /* EDIT EXAM PANEL */
+  .edit-panel {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 2px solid var(--primary);
+    display: none;
+  }
+
+  .edit-panel.open { display: block; }
+
+  .edit-panel-title {
+    font-family: var(--font-head);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--primary);
+  }
+
+  .form-textarea { resize: vertical; min-height: 80px; }
+
+  /* SECTION CARDS */
+  .section-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: var(--font-head);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    height: 8px;
+    background: var(--bg);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 100px;
+    transition: width 0.5s ease;
+  }
+
+  /* SUBJECT LIST */
+  .subject-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .subject-item:last-child { border-bottom: none; }
+
+  .subject-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .subject-name { flex: 1; font-size: 14px; font-weight: 500; }
+
+  .subject-progress {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  /* PLAN TABLE */
+  .plan-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .plan-table th {
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-family: var(--font-head);
+  }
+
+  .plan-table th:first-child { border-radius: 10px 0 0 0; }
+  .plan-table th:last-child { border-radius: 0 10px 0 0; }
+
+  .plan-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .plan-table tr:last-child td { border-bottom: none; }
+
+  .plan-table tr:hover td { background: var(--bg); }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .tag-primary { background: rgba(108,99,255,0.12); color: var(--primary); }
+  .tag-success { background: rgba(67,233,123,0.12); color: #1a8a45; }
+  .tag-warning { background: rgba(249,202,36,0.15); color: #8a6d00; }
+  .tag-danger { background: rgba(255,107,107,0.12); color: #cc2929; }
+
+  /* CHECKBOX */
+  .check-done {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .check-done.checked {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+  }
+
+  /* FILE ATTACH */
+  .file-attach-zone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+  }
+
+  .file-attach-zone:hover {
+    border-color: var(--primary);
+    background: rgba(108,99,255,0.04);
+  }
+
+  .file-attach-zone.drag-over {
+    border-color: var(--primary);
+    background: rgba(108,99,255,0.08);
+  }
+
+  .file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .file-icon { font-size: 20px; }
+
+  .file-name { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .file-size { color: var(--text-muted); font-size: 12px; }
+
+  .file-delete {
+    cursor: pointer;
+    color: var(--danger);
+    font-size: 16px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  .file-delete:hover { background: rgba(255,107,107,0.1); }
+
+  /* FOLDERS */
+  .folder-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .folder-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .folder-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    color: var(--text-muted);
+    transition: all 0.2s;
+    font-family: var(--font);
+  }
+
+  .folder-tab:hover { border-color: var(--primary); color: var(--primary); }
+
+  .folder-tab.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+
+  .folder-tab .folder-count {
+    background: rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 10px;
+  }
+
+  .folder-tab:not(.active) .folder-count {
+    background: rgba(108,99,255,0.12);
+    color: var(--primary);
+  }
+
+  .folder-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 8px;
+  }
+
+  .folder-item:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+
+  .folder-item-icon { font-size: 28px; }
+
+  .folder-item-info { flex: 1; }
+  .folder-item-name { font-weight: 600; font-size: 14px; }
+  .folder-item-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .folder-item-actions { display: flex; gap: 6px; }
+
+  .folder-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .folder-breadcrumb span { cursor: pointer; }
+  .folder-breadcrumb span:hover { color: var(--primary); text-decoration: underline; }
+  .folder-breadcrumb .sep { color: var(--border); }
+
+  /* NOTES */
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .note-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .note-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+
+  .note-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .note-preview { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .note-date { font-size: 11px; color: var(--text-muted); margin-top: 10px; }
+
+  /* OVERLAY */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 90;
+    backdrop-filter: blur(2px);
+  }
+
+  .overlay.open { display: block; }
+
+  /* MODAL */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal.open { display: flex; }
+
+  .modal-box {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px;
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-title {
+    font-family: var(--font-head);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* INSTALL BANNER */
+  .install-banner {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .install-icon { font-size: 32px; }
+
+  .install-text { flex: 1; }
+  .install-title { font-weight: 700; font-size: 14px; color: #0a4a2a; }
+  .install-sub { font-size: 12px; color: #1a6a40; margin-top: 2px; }
+
+  .btn-install {
+    background: #fff;
+    color: #0a4a2a;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-install:hover { background: #f0fff8; transform: scale(1.02); }
+
+  /* TOAST */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toast {
+    background: var(--text);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: toastIn 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+
+  @keyframes toastIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* WEEK PLAN */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+
+  .day-col { display: flex; flex-direction: column; gap: 4px; }
+
+  .day-header {
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-muted);
+    padding: 6px 0;
+    border-radius: 8px;
+    background: var(--bg);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .day-header.today { background: var(--primary); color: #fff; }
+
+  .day-block {
+    border-radius: 8px;
+    padding: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .day-block:hover { opacity: 0.85; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.open { transform: translateX(0); }
+    #main { margin-left: 0; }
+    .overlay { display: none; }
+    .overlay.open { display: block; }
+    .week-grid { grid-template-columns: repeat(7, 1fr); }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .topbar { padding: 0 16px; }
+    .page { padding: 16px; }
+    .exam-banner { padding: 18px 20px; }
+    .exam-days-num { font-size: 36px; }
+  }
+
+  @media (max-width: 480px) {
+    .week-grid { grid-template-columns: repeat(4, 1fr); }
+    .btn span { display: none; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* COLOR DOTS */
+  .colors { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .color-dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .color-dot.selected { border-color: #000; transform: scale(1.15); }
+
+  .add-row-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1.5px dashed var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .add-row-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(108,99,255,0.04);
+  }
+
+  .editable { cursor: pointer; }
+  .editable:hover { background: rgba(108,99,255,0.06); border-radius: 6px; }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+  }
+  .empty-state-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state-text { font-size: 14px; }
+
+  /* ===== TIME BLOCKING ===== */
+  .tb-view-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+  .tb-tab {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .tb-tab.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(108,99,255,0.35);
+  }
+  .tb-tab:hover:not(.active) { background: white; color: var(--primary); }
+
+  /* NAV bar for day/week/month */
+  .tb-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 10px;
+  }
+  .tb-nav-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .tb-nav-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .tb-nav-title {
+    font-family: var(--font-head);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+    text-align: center;
+  }
+  .tb-today-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1.5px solid var(--primary);
+    background: transparent;
+    color: var(--primary);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tb-today-btn:hover { background: var(--primary); color: #fff; }
+
+  /* ===== DAY VIEW ===== */
+  .tb-day-grid {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--card);
+  }
+  .tb-hour-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+    padding: 0 8px;
+    height: 56px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 4px;
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+    font-weight: 600;
+  }
+  .tb-hour-slot {
+    height: 56px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .tb-hour-slot:hover { background: rgba(108,99,255,0.04); }
+  .tb-hour-slot:last-child { border-bottom: none; }
+  .tb-hour-slot .tb-half-line {
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    border-top: 1px dashed rgba(108,99,255,0.12);
+  }
+  .tb-block {
+    position: absolute;
+    left: 4px; right: 4px;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 2;
+    overflow: hidden;
+    border-left: 3px solid rgba(0,0,0,0.2);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.15s;
+  }
+  .tb-block:hover { opacity: 0.85; transform: scale(1.01); }
+  .tb-block-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tb-block-time { font-size: 10px; opacity: 0.75; margin-top: 1px; }
+  .tb-current-time {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: var(--danger);
+    z-index: 10;
+    pointer-events: none;
+  }
+  .tb-current-time::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--danger);
+  }
+
+  /* ===== WEEK VIEW ===== */
+  .tb-week-grid {
+    display: grid;
+    grid-template-columns: 52px repeat(7, 1fr);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--card);
+  }
+  .tb-week-header {
+    text-align: center;
+    padding: 10px 4px;
+    font-size: 12px;
+    font-weight: 700;
+    border-bottom: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--text-muted);
+  }
+  .tb-week-header.today-col {
+    background: var(--primary);
+    color: #fff;
+  }
+  .tb-week-header-empty {
+    border-bottom: 2px solid var(--border);
+    background: var(--bg);
+  }
+  .tb-week-hour-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: right;
+    padding: 0 6px;
+    height: 44px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 3px;
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+  .tb-week-cell {
+    height: 44px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .tb-week-cell:hover { background: rgba(108,99,255,0.04); }
+  .tb-week-cell:last-child { border-right: none; }
+  .tb-week-block {
+    position: absolute;
+    inset: 2px;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-size: 10px;
+    font-weight: 600;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.15s;
+  }
+  .tb-week-block:hover { opacity: 0.8; }
+
+  /* ===== MONTH VIEW ===== */
+  .tb-month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--card);
+  }
+  .tb-month-day-header {
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--bg);
+    border-bottom: 2px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tb-month-cell {
+    min-height: 90px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .tb-month-cell:hover { background: rgba(108,99,255,0.04); }
+  .tb-month-cell.other-month { opacity: 0.38; }
+  .tb-month-cell.today-cell {
+    background: rgba(108,99,255,0.06);
+  }
+  .tb-month-cell:nth-child(7n) { border-right: none; }
+  .tb-month-date {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    width: 24px; height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 2px;
+  }
+  .tb-month-cell.today-cell .tb-month-date {
+    background: var(--primary);
+    color: #fff;
+  }
+  .tb-month-event {
+    display: block;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .tb-month-event:hover { opacity: 0.75; }
+  .tb-month-more {
+    font-size: 10px;
+    color: var(--primary);
+    font-weight: 600;
+    padding: 1px 4px;
+    cursor: pointer;
+  }
+
+  /* Stats row */
+  .tb-stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .tb-stat-mini {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tb-stat-mini-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+  .tb-stat-mini-val { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--primary); }
+
+  /* Quick add strip */
+  .tb-quick-add {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .tb-week-grid { grid-template-columns: 40px repeat(7, 1fr); }
+    .tb-week-header { font-size: 10px; padding: 8px 2px; }
+    .tb-week-hour-label { font-size: 9px; padding: 0 3px; height: 36px; }
+    .tb-week-cell { height: 36px; }
+    .tb-month-cell { min-height: 64px; }
+    .tb-month-event { display: none; }
+    .tb-month-more { display: block !important; }
+    .tb-day-grid { grid-template-columns: 42px 1fr; }
+    .tb-hour-label { height: 48px; font-size: 10px; padding: 0 4px; }
+    .tb-hour-slot { height: 48px; }
+  }
+  /* ===== CLOCK PAGE ===== */
+  .clock-page-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+
+  .clock-widget {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  .clock-widget-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .clock-widget-title .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  /* Countdown timer */
+  .cw-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .cw-input-box {
+    text-align: center;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 6px;
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .cw-input-box:focus { border-color: var(--primary); }
+
+  .cw-big-time {
+    font-family: var(--font-head);
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--text);
+    text-align: center;
+    letter-spacing: 3px;
+    margin: 12px 0 20px;
+    line-height: 1;
+  }
+
+  .cw-divider { height: 1px; background: var(--border); margin-bottom: 18px; }
+
+  .cw-btn-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .cw-btn-main {
+    flex: 1;
+    padding: 13px;
+    border-radius: 12px;
+    border: none;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+
+  .cw-btn-main.green { background: #00b894; color: #fff; }
+  .cw-btn-main.green:hover { background: #00997e; }
+  .cw-btn-main.purple { background: var(--primary); color: #fff; }
+  .cw-btn-main.purple:hover { background: var(--primary-dark); }
+  .cw-btn-main.red { background: var(--danger); color: #fff; }
+  .cw-btn-main.red:hover { background: #cc2929; }
+
+  .cw-btn-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .cw-btn-icon:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* Stopwatch laps */
+  .sw-laps {
+    margin-top: 14px;
+    max-height: 160px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sw-lap-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    background: var(--bg);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .sw-lap-num { color: var(--text-muted); width: 28px; }
+  .sw-lap-time { flex: 1; font-family: var(--font-head); color: var(--text); }
+  .sw-lap-diff { color: var(--text-muted); font-size: 11px; }
+
+  /* Exam countdown widget */
+  .ecw-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .ecw-result {
+    text-align: center;
+    padding: 16px;
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
+  .ecw-exam-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .ecw-days-big {
+    font-family: var(--font-head);
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .ecw-days-label {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .ecw-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  .ecw-saved-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+
+  .ecw-saved-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+  }
+
+  .ecw-saved-item:hover { border-color: var(--primary); }
+  .ecw-saved-item .ecw-si-name { flex: 1; font-weight: 600; }
+  .ecw-saved-item .ecw-si-days { font-family: var(--font-head); font-weight: 800; font-size: 18px; }
+  .ecw-saved-item .ecw-si-del { color: var(--danger); cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+  .ecw-saved-item .ecw-si-del:hover { background: rgba(255,107,107,0.1); }
+
+  /* ===== OVERVIEW PAGE ===== */
+  .ov-page-header {
+    margin-bottom: 8px;
+  }
+  .ov-page-title {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .ov-page-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .ov-group-section {
+    margin-bottom: 28px;
+  }
+
+  .ov-group-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    border-bottom: 1.5px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+    letter-spacing: 0.3px;
+  }
+
+  .ov-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .ov-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px 16px 12px;
+    border: 1.5px solid var(--border);
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .ov-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px rgba(108,99,255,0.13);
+    transform: translateY(-1px);
+  }
+
+  .ov-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .ov-card-code {
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--primary);
+  }
+
+  .ov-card-rounds {
+    display: flex;
+    gap: 4px;
+  }
+
+  .ov-round-btn {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-family: var(--font-head);
+  }
+
+  .ov-round-btn.r1.done { background: #6c63ff; border-color: #6c63ff; color: #fff; }
+  .ov-round-btn.r2.done { background: #43e97b; border-color: #43e97b; color: #fff; }
+  .ov-round-btn.r3.done { background: #f9ca24; border-color: #f9ca24; color: #333; }
+  .ov-round-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+  .ov-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .ov-stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .ov-star {
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    line-height: 1;
+  }
+
+  .ov-star:hover { transform: scale(1.2); }
+
+  .ov-card-edit-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 11px;
+    padding: 2px 6px;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+
+  .ov-card:hover .ov-card-edit-btn { opacity: 1; }
+
+  /* Overview toolbar */
+  .ov-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  .ov-filter-tabs {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+
+  .ov-filter-tab {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    color: var(--text-muted);
+    transition: all 0.2s;
+    font-family: var(--font);
+  }
+
+  .ov-filter-tab:hover, .ov-filter-tab.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+
+  /* Subject modal group/code fields */
+
+  @media (max-width: 600px) {
+    .ov-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 400px) {
+    .ov-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">📚</div>
+      พิชิตสนามสอบ
+    </div>
+    <div class="sidebar-subtitle">แผนอ่านหนังสือส่วนตัว</div>
+  </div>
+
+  <nav>
+    <div class="nav-section-label">⏰ เวลา & นับถอยหลัง</div>
+    <!-- CLOCK as nav item -->
+    <div class="sidebar-clock-nav">
+      <div class="clock-time" id="clockTime">00:00:00</div>
+      <div class="clock-date" id="clockDate"></div>
+      <div class="clock-countdown" id="clockCountdown">
+        <div class="clock-countdown-label">⏳ นับถอยหลังสอบ</div>
+        <div class="clock-countdown-days" id="countdownDays">—</div>
+        <div class="clock-countdown-sub">วัน</div>
+      </div>
+    </div>
+
+    <div class="nav-section-label" style="margin-top:8px">เมนูหลัก</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">🏠</span> หน้าหลัก
+    </div>
+    <div class="nav-item" onclick="showPage('overview')">
+      <span class="nav-icon">🗂️</span> ภาพรวมหัวข้อ
+    </div>
+    <div class="nav-item" onclick="showPage('clock')">
+      <span class="nav-icon">⏰</span> นาฬิกา / จับเวลา
+    </div>
+    <div class="nav-item" onclick="showPage('plan')">
+      <span class="nav-icon">📅</span> แผนการเรียน
+      <span class="nav-badge" id="planBadge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('timeblock')">
+      <span class="nav-icon">⏱️</span> Time Blocking
+    </div>
+    <div class="nav-item" onclick="showPage('subjects')">
+      <span class="nav-icon">📖</span> วิชา & เนื้อหา
+    </div>
+    <div class="nav-item" onclick="showPage('files')">
+      <span class="nav-icon">📎</span> ไฟล์แนบ
+    </div>
+    <div class="nav-item" onclick="showPage('notes')">
+      <span class="nav-icon">📝</span> บันทึก & สรุป
+    </div>
+
+    <div class="nav-section-label" style="margin-top:8px">เครื่องมือเพิ่มเติม</div>
+    <div class="nav-item" onclick="showPage('analytics')">
+      <span class="nav-icon">📊</span> สถิติการอ่าน
+    </div>
+    <div class="nav-item" onclick="showPage('quiz')">
+      <span class="nav-icon">❓</span> แบบทดสอบตัวเอง
+    </div>
+    <div class="nav-item" onclick="showPage('reminder')">
+      <span class="nav-icon">🔔</span> เตือนความจำ
+    </div>
+    <div class="nav-item" onclick="showPage('pomodoro')">
+      <span class="nav-icon">🍅</span> Pomodoro Timer
+    </div>
+    <div class="nav-item" onclick="showPage('goals')">
+      <span class="nav-icon">🎯</span> เป้าหมายรายวัน
+    </div>
+
+    <div class="nav-section-label" style="margin-top:8px">ตั้งค่า</div>
+    <div class="nav-item" onclick="showPage('settings')">
+      <span class="nav-icon">⚙️</span> ข้อมูลสนามสอบ
+    </div>
+    <div class="nav-item" onclick="showPage('dashboard');setTimeout(()=>{if(!editMode)toggleEditMode();},100)">
+      <span class="nav-icon">✏️</span> แก้ไขสนามสอบ
+    </div>
+    <div class="nav-item" onclick="showInstallHelp()">
+      <span class="nav-icon">📲</span> ติดตั้งแอป
+    </div>
+  </nav>
+
+  <div class="sidebar-footer" style="color:rgba(255,255,255,0.3);font-size:11px;text-align:center;">
+    v2.0 · พิชิตสนามสอบ
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- MAIN -->
+<div id="main">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <button class="topbar-toggle" onclick="toggleSidebar()" title="เมนู">☰</button>
+    <div class="topbar-title" id="pageTitle">หน้าหลัก</div>
+    <div class="topbar-actions">
+      <button class="btn btn-outline btn-sm" onclick="toggleEditMode()">
+        <span>✏️</span> <span id="editBtnText">แก้ไข</span>
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="saveAll()">
+        <span>💾</span> <span>บันทึก</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- PAGE: DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div id="installBanner" class="install-banner" style="display:none">
+      <div class="install-icon">📲</div>
+      <div class="install-text">
+        <div class="install-title">ติดตั้งเป็นแอปได้เลย!</div>
+        <div class="install-sub">ใช้งานแบบออฟไลน์ได้บนมือถือและคอมพิวเตอร์</div>
+      </div>
+      <button class="btn-install" id="installBtn" onclick="doInstall()">📲 ติดตั้ง</button>
+    </div>
+
+    <!-- EXAM BANNER -->
+    <div class="exam-banner" id="examBanner">
+      <div>
+        <div class="exam-banner-title" id="examNameDisplay">📋 กำหนดชื่อสนามสอบ</div>
+        <div class="exam-banner-sub" id="examDateDisplay">กดปุ่ม "✏️ แก้ไขสนามสอบ" เพื่อตั้งค่าข้อมูล</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+        <div class="exam-banner-days">
+          <div class="exam-days-num" id="examDaysDisplay">?</div>
+          <div class="exam-days-label">วันที่เหลือ</div>
+        </div>
+        <button class="btn btn-sm" onclick="toggleEditMode()" style="background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.4);backdrop-filter:blur(4px)">
+          ✏️ แก้ไขสนามสอบ
+        </button>
+      </div>
+    </div>
+
+    <!-- EDIT EXAM PANEL -->
+    <div class="edit-panel" id="editExamPanel">
+      <div class="edit-panel-title">✏️ แก้ไขข้อมูลสนามสอบ</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">ชื่อสนามสอบ</label>
+          <input class="form-input" id="examNameInput" placeholder="เช่น ก.พ., ตชด., สอบครู...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">วันที่สอบ</label>
+          <input class="form-input" type="date" id="examDateInput">
+        </div>
+        <div class="form-group">
+          <label class="form-label">สถานที่สอบ</label>
+          <input class="form-input" id="examLocationInput" placeholder="เช่น โรงเรียน ABC">
+        </div>
+        <div class="form-group">
+          <label class="form-label">หน่วยงานที่รับสมัคร</label>
+          <input class="form-input" id="examOrgInput" placeholder="เช่น สำนักงาน ก.พ.">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">หมายเหตุ / รายละเอียดเพิ่มเติม</label>
+          <textarea class="form-textarea" id="examNoteInput" placeholder="ข้อมูลอื่น ๆ ที่ต้องการบันทึก"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="saveExamInfo()">💾 บันทึกข้อมูลสนามสอบ</button>
+        <button class="btn btn-outline" onclick="closeEditPanel()">✕ ยกเลิก</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">🎯 ภารกิจวันนี้</div>
+        <div class="stat-value" id="statToday">0</div>
+        <div class="stat-sub">รายการ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">✅ ทำแล้ว</div>
+        <div class="stat-value" id="statDone" style="color:var(--success)">0</div>
+        <div class="stat-sub">รายการ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">📚 วิชา</div>
+        <div class="stat-value" id="statSubjects">0</div>
+        <div class="stat-sub">วิชา</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">📎 ไฟล์</div>
+        <div class="stat-value" id="statFiles">0</div>
+        <div class="stat-sub">ไฟล์</div>
+      </div>
+    </div>
+
+    <!-- WEEKLY PROGRESS -->
+    <div class="section-card">
+      <div class="section-title">📊 ความคืบหน้าสัปดาห์นี้</div>
+      <div class="week-grid" id="weekGrid"></div>
+    </div>
+
+    <!-- SUBJECTS PROGRESS -->
+    <div class="section-card">
+      <div class="section-title">
+        📖 ความคืบหน้าวิชา
+        <button class="btn btn-sm btn-primary" onclick="showPage('subjects')">ดูทั้งหมด →</button>
+      </div>
+      <div id="subjectProgressList">
+        <div class="empty-state">
+          <div class="empty-state-icon">📖</div>
+          <div class="empty-state-text">ยังไม่มีวิชา กดไปที่เมนู "วิชา & เนื้อหา"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: OVERVIEW -->
+  <div class="page" id="page-overview">
+    <div class="ov-page-header">
+      <div class="ov-page-title">ภาพรวมหัวข้อ</div>
+      <div class="ov-page-sub">คลิกวงกลม 1/2/3 = รอบที่อ่าน · ดาว = ความมั่นใจ</div>
+    </div>
+    <div class="ov-toolbar">
+      <div class="ov-filter-tabs" id="ovFilterTabs"></div>
+      <button class="btn btn-sm btn-primary" onclick="openAddSubjectModal()">+ เพิ่มหัวข้อ</button>
+    </div>
+    <div id="ovContent"></div>
+  </div>
+
+  <!-- PAGE: CLOCK -->
+  <div class="page" id="page-clock">
+    <div class="clock-page-grid">
+
+      <!-- 1. Countdown Timer -->
+      <div class="clock-widget">
+        <div class="clock-widget-title">
+          <span class="dot" style="background:#6c63ff"></span>
+          นับถอยหลัง
+        </div>
+        <div class="cw-inputs">
+          <input class="cw-input-box" type="number" id="cdHour"   min="0" max="99"  value="0"  placeholder="0"  oninput="cdReset()" />
+          <input class="cw-input-box" type="number" id="cdMin"    min="0" max="59"  value="25" placeholder="25" oninput="cdReset()" />
+          <input class="cw-input-box" type="number" id="cdSec"    min="0" max="59"  value="0"  placeholder="0"  oninput="cdReset()" />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;font-size:10px;font-weight:600;color:var(--text-muted);margin-bottom:4px">
+          <span>ชั่วโมง</span><span>นาที</span><span>วินาที</span>
+        </div>
+        <div class="cw-big-time" id="cdDisplay">00:25:00</div>
+        <div class="cw-divider"></div>
+        <div class="cw-btn-row">
+          <button class="cw-btn-main purple" id="cdStartBtn" onclick="cdToggle()">▶ เริ่ม</button>
+          <button class="cw-btn-icon" onclick="cdReset()" title="รีเซ็ต">↺</button>
+        </div>
+      </div>
+
+      <!-- 2. Stopwatch -->
+      <div class="clock-widget">
+        <div class="clock-widget-title">
+          <span class="dot" style="background:#00b894"></span>
+          จับเวลา (Stopwatch)
+        </div>
+        <div class="cw-big-time" id="swDisplay">00:00:00</div>
+        <div class="cw-divider"></div>
+        <div class="cw-btn-row">
+          <button class="cw-btn-main green" id="swStartBtn" onclick="swToggle()">▶ เริ่ม</button>
+          <button class="cw-btn-icon" id="swLapBtn" onclick="swLap()" title="แลป" style="display:none">🏁 แลป</button>
+          <button class="cw-btn-icon" onclick="swReset()" title="รีเซ็ต">↺</button>
+        </div>
+        <div class="sw-laps" id="swLaps"></div>
+      </div>
+
+      <!-- 3. Exam Countdown -->
+      <div class="clock-widget">
+        <div class="clock-widget-title">
+          <span class="dot" style="background:#e17055"></span>
+          นับถอยหลังวันสอบ
+        </div>
+        <div class="ecw-form">
+          <div class="form-group">
+            <label class="form-label">ชื่อการสอบ (ไม่บังคับ)</label>
+            <input class="form-input" id="ecwName" placeholder="เช่น ก.พ. 2568, สอบนักวิเคราะห์...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">วันและเวลาสอบ</label>
+            <input class="form-input" type="datetime-local" id="ecwDatetime">
+          </div>
+        </div>
+        <button class="cw-btn-main" style="background:#e17055;color:#fff;border:none;padding:13px;border-radius:12px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px" onclick="ecwAdd()">
+          📅 ตั้งวันสอบ
+        </button>
+        <div id="ecwResult" style="display:none" class="ecw-result">
+          <div class="ecw-exam-name" id="ecwResultName">📌 การสอบ</div>
+          <div class="ecw-days-big" id="ecwResultDays">0</div>
+          <div class="ecw-days-label">วัน</div>
+          <div class="ecw-sub" id="ecwResultSub"></div>
+        </div>
+        <div class="ecw-saved-list" id="ecwSavedList"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PAGE: PLAN -->
+  <div class="page" id="page-plan">
+    <div class="section-card">
+      <div class="section-title">
+        📅 แผนการเรียนทั้งหมด
+        <button class="btn btn-sm btn-primary" onclick="openAddPlanModal()">+ เพิ่มแผน</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="plan-table" id="planTable">
+          <thead>
+            <tr>
+              <th style="width:40px">✓</th>
+              <th>วันที่</th>
+              <th>วิชา / หัวข้อ</th>
+              <th>เวลา</th>
+              <th>สถานะ</th>
+              <th style="width:60px"></th>
+            </tr>
+          </thead>
+          <tbody id="planTableBody"></tbody>
+        </table>
+      </div>
+      <button class="add-row-btn" onclick="openAddPlanModal()">+ เพิ่มแผนการเรียน</button>
+    </div>
+  </div>
+
+  <!-- PAGE: TIME BLOCKING -->
+  <div class="page" id="page-timeblock">
+
+    <!-- Stats row -->
+    <div class="tb-stats-row" id="tbStatsRow"></div>
+
+    <!-- View tabs -->
+    <div class="tb-view-tabs">
+      <button class="tb-tab active" id="tbTabDay"   onclick="switchTBView('day')">📅 รายวัน</button>
+      <button class="tb-tab"        id="tbTabWeek"  onclick="switchTBView('week')">🗓️ รายสัปดาห์</button>
+      <button class="tb-tab"        id="tbTabMonth" onclick="switchTBView('month')">📆 รายเดือน</button>
+    </div>
+
+    <!-- Navigation row -->
+    <div class="tb-nav">
+      <button class="tb-nav-btn" onclick="tbNavigate(-1)">‹</button>
+      <div class="tb-nav-title" id="tbNavTitle">—</div>
+      <button class="tb-today-btn" onclick="tbGoToday()">วันนี้</button>
+      <button class="tb-nav-btn" onclick="tbNavigate(1)">›</button>
+    </div>
+
+    <!-- Day View -->
+    <div id="tbDayView" class="section-card" style="padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:700">🕐 ตารางเวลาวันนี้</div>
+        <button class="btn btn-sm btn-primary" onclick="openTBModal()">+ เพิ่ม Block</button>
+      </div>
+      <div style="overflow-y:auto;max-height:600px;" id="tbDayScroll">
+        <div id="tbDayGrid" class="tb-day-grid"></div>
+      </div>
+    </div>
+
+    <!-- Week View -->
+    <div id="tbWeekView" class="section-card" style="display:none;padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:700">🗓️ ตารางเวลาสัปดาห์นี้</div>
+        <button class="btn btn-sm btn-primary" onclick="openTBModal()">+ เพิ่ม Block</button>
+      </div>
+      <div style="overflow:auto;max-height:580px">
+        <div id="tbWeekGrid" class="tb-week-grid"></div>
+      </div>
+    </div>
+
+    <!-- Month View -->
+    <div id="tbMonthView" class="section-card" style="display:none;padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:700">📆 ปฏิทินรายเดือน</div>
+        <button class="btn btn-sm btn-primary" onclick="openTBModal()">+ เพิ่ม Block</button>
+      </div>
+      <div id="tbMonthGrid" class="tb-month-grid"></div>
+    </div>
+
+  </div>
+
+  <!-- PAGE: SUBJECTS -->
+  <div class="page" id="page-subjects">
+    <div class="section-card">
+      <div class="section-title">
+        📖 รายวิชา
+        <button class="btn btn-sm btn-primary" onclick="openAddSubjectModal()">+ เพิ่มวิชา</button>
+      </div>
+      <div id="subjectList"></div>
+      <button class="add-row-btn" onclick="openAddSubjectModal()">+ เพิ่มวิชา</button>
+    </div>
+  </div>
+
+  <!-- PAGE: FILES -->
+  <div class="page" id="page-files">
+    <div class="section-card">
+      <div class="section-title">
+        📁 โฟล์เดอร์ & ไฟล์แนบ
+        <button class="btn btn-sm btn-outline" onclick="openCreateFolderModal()">📁 สร้างโฟล์เดอร์</button>
+      </div>
+
+      <!-- Folder breadcrumb -->
+      <div class="folder-breadcrumb" id="folderBreadcrumb">
+        <span onclick="navigateToFolder(null)">📁 ทั้งหมด</span>
+      </div>
+
+      <!-- Folder tabs (all + each folder) -->
+      <div class="folder-toolbar">
+        <div class="folder-tabs" id="folderTabs"></div>
+      </div>
+
+      <!-- Folder grid (shown when at root) -->
+      <div id="folderGrid"></div>
+
+      <!-- Upload zone -->
+      <div class="file-attach-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <div style="font-size:36px;margin-bottom:8px">📂</div>
+        <div style="font-weight:600;color:var(--text)">คลิกหรือลากไฟล์มาวางที่นี่</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">รองรับทุกประเภทไฟล์ · บันทึกลงเครื่องผ่าน IndexedDB</div>
+      </div>
+      <input type="file" id="fileInput" multiple style="display:none" onchange="handleFileSelect(this.files)">
+      <div style="font-size:11px;color:var(--success);margin-top:8px;padding:6px 10px;background:rgba(67,233,123,0.08);border-radius:8px">
+        ✅ ไฟล์ถูกบันทึกลงเครื่องจริง (IndexedDB) — ดาวน์โหลดและแชร์ได้
+      </div>
+      <div class="file-list" id="fileList"></div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">🔗 ลิงก์อ้างอิง</div>
+      <div id="linkList"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <input class="form-input" id="linkInput" placeholder="วาง URL ที่นี่..." style="flex:1">
+        <input class="form-input" id="linkLabelInput" placeholder="ชื่อลิงก์" style="width:160px">
+        <button class="btn btn-primary btn-sm" onclick="addLink()">เพิ่ม</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: NOTES -->
+  <div class="page" id="page-notes">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-family:var(--font-head);font-size:18px;font-weight:600">📝 บันทึก & สรุป</div>
+      <button class="btn btn-primary btn-sm" onclick="openNoteModal()">+ เพิ่มบันทึก</button>
+    </div>
+    <div class="notes-grid" id="notesGrid"></div>
+  </div>
+
+  <!-- PAGE: SETTINGS -->
+  <div class="page" id="page-settings">
+    <div class="section-card">
+      <div class="section-title">⚙️ ข้อมูลสนามสอบ (แก้ไขได้)</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">ชื่อสนามสอบ</label>
+          <input class="form-input" id="settingExamName" placeholder="เช่น ก.พ. 2568">
+        </div>
+        <div class="form-group">
+          <label class="form-label">วันที่สอบ</label>
+          <input class="form-input" type="date" id="settingExamDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">สถานที่สอบ</label>
+          <input class="form-input" id="settingExamLocation">
+        </div>
+        <div class="form-group">
+          <label class="form-label">หน่วยงาน</label>
+          <input class="form-input" id="settingExamOrg">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">หมายเหตุ</label>
+          <textarea class="form-textarea" id="settingExamNote"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="saveExamFromSettings()">💾 บันทึก</button>
+        <button class="btn btn-outline" onclick="resetAll()" style="color:var(--danger);border-color:var(--danger)">🗑️ ล้างข้อมูลทั้งหมด</button>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">📲 ติดตั้งแอปพลิเคชัน</div>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;line-height:1.7">
+        สามารถติดตั้งเป็นแอปพลิเคชันบนมือถือและคอมพิวเตอร์ได้ โดยไม่ต้องต่ออินเทอร์เน็ต
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+        <div class="stat-card" style="border:1px solid var(--border)">
+          <div style="font-size:28px;margin-bottom:8px">🍎</div>
+          <div style="font-weight:700;margin-bottom:4px">iPhone / iPad</div>
+          <ol style="font-size:12px;color:var(--text-muted);padding-left:18px;line-height:2">
+            <li>เปิดในเบราว์เซอร์ Safari</li>
+            <li>กดปุ่ม "แชร์" (□↑)</li>
+            <li>เลือก "เพิ่มลงในหน้าจอโฮม"</li>
+            <li>กด "เพิ่ม"</li>
+          </ol>
+        </div>
+        <div class="stat-card" style="border:1px solid var(--border)">
+          <div style="font-size:28px;margin-bottom:8px">🤖</div>
+          <div style="font-weight:700;margin-bottom:4px">Android</div>
+          <ol style="font-size:12px;color:var(--text-muted);padding-left:18px;line-height:2">
+            <li>เปิดใน Chrome</li>
+            <li>กดเมนู 3 จุด (⋮)</li>
+            <li>เลือก "เพิ่มลงหน้าจอหลัก"</li>
+            <li>กด "เพิ่ม"</li>
+          </ol>
+        </div>
+        <div class="stat-card" style="border:1px solid var(--border)">
+          <div style="font-size:28px;margin-bottom:8px">💻</div>
+          <div style="font-weight:700;margin-bottom:4px">คอมพิวเตอร์</div>
+          <ol style="font-size:12px;color:var(--text-muted);padding-left:18px;line-height:2">
+            <li>เปิดใน Chrome / Edge</li>
+            <li>กดไอคอน ⊕ ในแถบ URL</li>
+            <li>หรือกดเมนู → "ติดตั้งแอป"</li>
+            <li>กด "ติดตั้ง"</li>
+          </ol>
+        </div>
+      </div>
+      <div style="margin-top:16px;background:var(--bg);border-radius:10px;padding:14px;font-size:13px;color:var(--text-muted)">
+        💡 <strong>การเก็บข้อมูล:</strong> ข้อมูลแผน/วิชา/บันทึก → localStorage · ไฟล์แนบ → IndexedDB (รองรับไฟล์ขนาดใหญ่) ข้อมูลจะคงอยู่แม้ปิดแอป
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: ANALYTICS -->
+<div class="page" id="page-analytics">
+  <div class="stats-grid" id="analyticsStats"></div>
+  <div class="section-card">
+    <div class="section-title">📈 ชั่วโมงอ่านรายวัน (7 วันล่าสุด)</div>
+    <div id="analyticsBarChart" style="display:flex;align-items:flex-end;gap:8px;height:140px;padding:8px 0"></div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">📚 สัดส่วนการอ่านตามวิชา</div>
+    <div id="analyticsSubjectBars"></div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">🔥 Streak การอ่านต่อเนื่อง</div>
+    <div id="analyticsStreak"></div>
+  </div>
+</div>
+
+<!-- PAGE: QUIZ -->
+<div class="page" id="page-quiz">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div style="font-family:var(--font-head);font-size:18px;font-weight:600">❓ แบบทดสอบตัวเอง</div>
+    <button class="btn btn-primary btn-sm" onclick="openQuizAddModal()">+ เพิ่มข้อ Q&A</button>
+  </div>
+  <div id="quizModeArea" style="display:none">
+    <div class="section-card" id="quizCard">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px" id="quizProgress">ข้อ 1/1</div>
+      <div style="font-size:16px;font-weight:600;margin-bottom:20px;line-height:1.6" id="quizQuestion"></div>
+      <button class="btn btn-outline" style="width:100%;margin-bottom:12px" onclick="revealAnswer()">👁️ ดูคำตอบ</button>
+      <div id="quizAnswer" style="display:none;background:rgba(67,233,123,0.1);border:1px solid #43e97b;border-radius:10px;padding:14px;font-size:14px;line-height:1.7;margin-bottom:14px"></div>
+      <div id="quizBtns" style="display:none;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-success btn-sm" onclick="quizResult(true)">✅ จำได้แล้ว</button>
+        <button class="btn btn-danger btn-sm" onclick="quizResult(false)">❌ ยังจำไม่ได้</button>
+        <button class="btn btn-outline btn-sm" onclick="endQuiz()">⏹️ หยุด</button>
+      </div>
+    </div>
+    <div id="quizSummary" style="display:none"></div>
+  </div>
+  <div id="quizListArea">
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <select class="form-select" id="quizFilterSubject" style="flex:1;max-width:220px" onchange="renderQuizPage()">
+        <option value="">— ทุกวิชา —</option>
+      </select>
+      <button class="btn btn-primary" onclick="startQuiz()" id="startQuizBtn">🎲 สุ่มทดสอบ</button>
+    </div>
+    <div id="quizList"></div>
+  </div>
+</div>
+
+<!-- PAGE: REMINDER -->
+<div class="page" id="page-reminder">
+  <div class="section-card">
+    <div class="section-title">🔔 ตั้งเตือนความจำ</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">ข้อความที่ต้องการเตือน</label>
+        <input class="form-input" id="reminderMsg" placeholder="เช่น อ่านคณิตศาสตร์วันนี้!">
+      </div>
+      <div class="form-group">
+        <label class="form-label">เวลาที่ต้องการเตือน</label>
+        <input class="form-input" type="time" id="reminderTime">
+      </div>
+      <div class="form-group">
+        <label class="form-label">ความถี่</label>
+        <select class="form-select" id="reminderRepeat">
+          <option value="once">ครั้งเดียว</option>
+          <option value="daily">ทุกวัน</option>
+          <option value="weekdays">วันจันทร์–ศุกร์</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="addReminder()" style="margin-top:8px">+ ตั้งการแจ้งเตือน</button>
+    <div style="margin-top:12px;font-size:12px;color:var(--text-muted)" id="reminderPermNote"></div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">📋 รายการแจ้งเตือน</div>
+    <div id="reminderList"></div>
+  </div>
+</div>
+
+<!-- PAGE: POMODORO -->
+<div class="page" id="page-pomodoro">
+  <div style="max-width:500px;margin:0 auto">
+    <div class="section-card" style="text-align:center">
+      <div style="display:flex;gap:6px;justify-content:center;margin-bottom:24px">
+        <button class="tb-tab active" id="pomTabWork" onclick="pomSetMode('work')">🍅 โฟกัส</button>
+        <button class="tb-tab" id="pomTabShort" onclick="pomSetMode('short')">☕ พักสั้น</button>
+        <button class="tb-tab" id="pomTabLong" onclick="pomSetMode('long')">🛌 พักยาว</button>
+      </div>
+      <div style="font-family:var(--font-head);font-size:80px;font-weight:800;color:var(--primary);letter-spacing:4px;margin:16px 0" id="pomDisplay">25:00</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px" id="pomLabel">โฟกัส 25 นาที · พักสั้น 5 นาที ทุก 4 รอบ</div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:24px">
+        <button class="cw-btn-main purple" style="max-width:200px" id="pomStartBtn" onclick="pomToggle()">▶ เริ่ม</button>
+        <button class="cw-btn-icon" onclick="pomReset()">↺</button>
+      </div>
+      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap" id="pomRounds"></div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">⚙️ ตั้งค่าเวลา</div>
+      <div class="form-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="form-group">
+          <label class="form-label">โฟกัส (นาที)</label>
+          <input class="form-input" type="number" id="pomWorkMin" value="25" min="1" max="90" onchange="pomApplySettings()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">พักสั้น (นาที)</label>
+          <input class="form-input" type="number" id="pomShortMin" value="5" min="1" max="30" onchange="pomApplySettings()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">พักยาว (นาที)</label>
+          <input class="form-input" type="number" id="pomLongMin" value="15" min="1" max="60" onchange="pomApplySettings()">
+        </div>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">📅 ประวัติ Pomodoro วันนี้</div>
+      <div id="pomHistory"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: GOALS -->
+<div class="page" id="page-goals">
+  <div class="section-card">
+    <div class="section-title">🎯 เป้าหมายชั่วโมงวันนี้</div>
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <label class="form-label">เป้าหมายชั่วโมงต่อวัน</label>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input class="form-input" type="number" id="goalHoursInput" min="0.5" max="16" step="0.5" placeholder="4" style="max-width:120px">
+          <button class="btn btn-primary" onclick="saveGoal()">บันทึก</button>
+        </div>
+      </div>
+      <div id="goalTodayCircle" style="width:120px;height:120px;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center">
+        <svg width="120" height="120" style="position:absolute;top:0;left:0;transform:rotate(-90deg)">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="10"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="var(--primary)" stroke-width="10" stroke-linecap="round"
+            id="goalCircleBar" stroke-dasharray="314" stroke-dashoffset="314"/>
+        </svg>
+        <div style="text-align:center;z-index:1">
+          <div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--primary)" id="goalPct">0%</div>
+          <div style="font-size:10px;color:var(--text-muted)" id="goalHrsDone">0 ชม.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">📝 บันทึกชั่วโมงที่อ่าน</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px">
+      <div class="form-group" style="flex:1;min-width:140px">
+        <label class="form-label">วิชา</label>
+        <input class="form-input" id="goalSubjectInput" placeholder="เช่น คณิตศาสตร์">
+      </div>
+      <div class="form-group" style="width:100px">
+        <label class="form-label">ชั่วโมง</label>
+        <input class="form-input" type="number" id="goalHrsInput" min="0.5" max="12" step="0.5" placeholder="1.5">
+      </div>
+      <div class="form-group" style="width:140px">
+        <label class="form-label">วันที่</label>
+        <input class="form-input" type="date" id="goalDateInput">
+      </div>
+      <button class="btn btn-primary" onclick="addGoalLog()" style="align-self:flex-end">+ บันทึก</button>
+    </div>
+    <div id="goalLogList"></div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">📊 สรุปรายสัปดาห์</div>
+    <div id="goalWeekChart" style="display:flex;align-items:flex-end;gap:8px;height:120px;padding:8px 0"></div>
+  </div>
+</div>
+
+<!-- MODAL: QUIZ ADD -->
+<div class="modal" id="quizModal">
+  <div class="modal-box">
+    <div class="modal-title">❓ เพิ่ม / แก้ไขข้อ Q&A</div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">วิชา</label>
+      <input class="form-input" id="quizSubjectInput" placeholder="เช่น คณิตศาสตร์">
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">คำถาม</label>
+      <textarea class="form-textarea" id="quizQuestionInput" style="min-height:80px" placeholder="เขียนคำถาม..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">คำตอบ</label>
+      <textarea class="form-textarea" id="quizAnswerInput" style="min-height:80px" placeholder="เขียนคำตอบ..."></textarea>
+    </div>
+    <input type="hidden" id="quizEditId">
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="quizDeleteBtn" onclick="deleteQuiz()" style="margin-right:auto;display:none">🗑️ ลบ</button>
+      <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveQuiz()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ADD PLAN -->
+<div class="overlay" id="modalOverlay" onclick="closeModal()"></div>
+
+<div class="modal" id="planModal">
+  <div class="modal-box">
+    <div class="modal-title">📅 เพิ่ม / แก้ไขแผนการเรียน</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">วันที่</label>
+        <input class="form-input" type="date" id="planDate">
+      </div>
+      <div class="form-group">
+        <label class="form-label">เวลา</label>
+        <input class="form-input" type="time" id="planTime">
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">วิชา / หัวข้อ</label>
+        <input class="form-input" id="planSubject" placeholder="เช่น คณิตศาสตร์ - สมการ">
+      </div>
+      <div class="form-group">
+        <label class="form-label">ระยะเวลา</label>
+        <input class="form-input" id="planDuration" placeholder="เช่น 2 ชั่วโมง">
+      </div>
+      <div class="form-group">
+        <label class="form-label">สถานะ</label>
+        <select class="form-select" id="planStatus">
+          <option value="pending">⏳ ยังไม่เริ่ม</option>
+          <option value="inprogress">🔄 กำลังเรียน</option>
+          <option value="done">✅ เสร็จแล้ว</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">หมายเหตุ</label>
+        <textarea class="form-textarea" id="planNote" placeholder="หมายเหตุเพิ่มเติม..."></textarea>
+      </div>
+    </div>
+    <input type="hidden" id="planEditId">
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="savePlan()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ADD SUBJECT -->
+<div class="modal" id="subjectModal">
+  <div class="modal-box">
+    <div class="modal-title">📖 เพิ่ม / แก้ไขวิชา</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">รหัสหัวข้อ <span style="color:var(--text-muted);font-weight:400">(เช่น A1, B2)</span></label>
+        <input class="form-input" id="subjectCode" placeholder="A1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">หมวดหมู่ <span style="color:var(--text-muted);font-weight:400">(เช่น A, B หรือชื่อกลุ่ม)</span></label>
+        <input class="form-input" id="subjectGroup" placeholder="A">
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">ชื่อวิชา / หัวข้อ</label>
+        <input class="form-input" id="subjectName" placeholder="เช่น ภาษาไทย, คณิตศาสตร์...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">น้ำหนัก / คะแนน</label>
+        <input class="form-input" id="subjectWeight" placeholder="เช่น 30 คะแนน">
+      </div>
+      <div class="form-group">
+        <label class="form-label">สี</label>
+        <div class="colors" id="colorPicker">
+          <div class="color-dot selected" style="background:#6c63ff" data-color="#6c63ff"></div>
+          <div class="color-dot" style="background:#ff6584" data-color="#ff6584"></div>
+          <div class="color-dot" style="background:#43e97b" data-color="#43e97b"></div>
+          <div class="color-dot" style="background:#f9ca24" data-color="#f9ca24"></div>
+          <div class="color-dot" style="background:#ff7675" data-color="#ff7675"></div>
+          <div class="color-dot" style="background:#74b9ff" data-color="#74b9ff"></div>
+          <div class="color-dot" style="background:#fd79a8" data-color="#fd79a8"></div>
+          <div class="color-dot" style="background:#00cec9" data-color="#00cec9"></div>
+        </div>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">คำอธิบายกลุ่ม <span style="color:var(--text-muted);font-weight:400">(ชื่อหมวด เช่น "ความรู้เกี่ยวกับการปฏิบัติหน้าที่")</span></label>
+        <input class="form-input" id="subjectGroupLabel" placeholder="เช่น ความรู้เกี่ยวกับการปฏิบัติหน้าที่">
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">หัวข้อย่อย (คั่นด้วย ,)</label>
+        <textarea class="form-textarea" id="subjectTopics" placeholder="เช่น บทที่ 1 - เลขคณิต, บทที่ 2 - พีชคณิต..."></textarea>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">ความคืบหน้า (%)</label>
+        <input class="form-input" type="number" id="subjectProgress" min="0" max="100" placeholder="0-100">
+      </div>
+    </div>
+    <input type="hidden" id="subjectEditId">
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeSubjectModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveSubject()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: NOTE -->
+<div class="modal" id="noteModal">
+  <div class="modal-box">
+    <div class="modal-title">📝 บันทึก</div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">ชื่อ</label>
+      <input class="form-input" id="noteTitle" placeholder="ชื่อบันทึก...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">เนื้อหา</label>
+      <textarea class="form-textarea" id="noteContent" style="min-height:150px" placeholder="เขียนสรุป ความจำ หรือบันทึกอะไรก็ได้..."></textarea>
+    </div>
+    <input type="hidden" id="noteEditId">
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeNoteModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveNote()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TIME BLOCK -->
+<div class="modal" id="tbModal">
+  <div class="modal-box">
+    <div class="modal-title">⏱️ เพิ่ม / แก้ไข Time Block</div>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">หัวข้อ / วิชา</label>
+        <input class="form-input" id="tbSubject" placeholder="เช่น อ่านคณิตศาสตร์ บทที่ 3...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">วันที่</label>
+        <input class="form-input" type="date" id="tbDate">
+      </div>
+      <div class="form-group">
+        <label class="form-label">เวลาเริ่ม</label>
+        <input class="form-input" type="time" id="tbStartTime">
+      </div>
+      <div class="form-group">
+        <label class="form-label">เวลาสิ้นสุด</label>
+        <input class="form-input" type="time" id="tbEndTime">
+      </div>
+      <div class="form-group">
+        <label class="form-label">ประเภท</label>
+        <select class="form-select" id="tbType">
+          <option value="study">📚 อ่านหนังสือ</option>
+          <option value="practice">✏️ ทำโจทย์</option>
+          <option value="review">🔄 ทบทวน</option>
+          <option value="break">☕ พักผ่อน</option>
+          <option value="exam">🎯 สอบ / ทดสอบ</option>
+          <option value="other">📌 อื่น ๆ</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">สี</label>
+        <div class="colors" id="tbColorPicker">
+          <div class="color-dot selected" style="background:#6c63ff" data-color="#6c63ff"></div>
+          <div class="color-dot" style="background:#ff6584" data-color="#ff6584"></div>
+          <div class="color-dot" style="background:#43e97b" data-color="#43e97b"></div>
+          <div class="color-dot" style="background:#f9ca24" data-color="#f9ca24"></div>
+          <div class="color-dot" style="background:#74b9ff" data-color="#74b9ff"></div>
+          <div class="color-dot" style="background:#fd79a8" data-color="#fd79a8"></div>
+          <div class="color-dot" style="background:#00cec9" data-color="#00cec9"></div>
+          <div class="color-dot" style="background:#e17055" data-color="#e17055"></div>
+        </div>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">หมายเหตุ</label>
+        <textarea class="form-textarea" id="tbNote" placeholder="รายละเอียดเพิ่มเติม..." style="min-height:60px"></textarea>
+      </div>
+    </div>
+    <input type="hidden" id="tbEditId">
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="tbDeleteBtn" onclick="deleteTB()" style="margin-right:auto;display:none">🗑️ ลบ</button>
+      <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveTB()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CREATE FOLDER -->
+<div class="modal" id="folderModal">
+  <div class="modal-box">
+    <div class="modal-title">📁 สร้างโฟล์เดอร์ใหม่</div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">ชื่อโฟล์เดอร์</label>
+      <input class="form-input" id="folderNameInput" placeholder="เช่น ภาษาไทย, คณิต, เอกสารสำคัญ...">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">ไอคอน</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px" id="folderIconPicker">
+        <span class="folder-icon-opt selected" data-icon="📁" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--primary);background:rgba(108,99,255,0.08)">📁</span>
+        <span class="folder-icon-opt" data-icon="📚" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">📚</span>
+        <span class="folder-icon-opt" data-icon="📝" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">📝</span>
+        <span class="folder-icon-opt" data-icon="🔬" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">🔬</span>
+        <span class="folder-icon-opt" data-icon="🧮" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">🧮</span>
+        <span class="folder-icon-opt" data-icon="🌍" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">🌍</span>
+        <span class="folder-icon-opt" data-icon="⚖️" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">⚖️</span>
+        <span class="folder-icon-opt" data-icon="💼" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">💼</span>
+        <span class="folder-icon-opt" data-icon="🎯" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">🎯</span>
+        <span class="folder-icon-opt" data-icon="⭐" style="font-size:24px;cursor:pointer;padding:4px 8px;border-radius:8px;border:2px solid var(--border)">⭐</span>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">สี</label>
+      <div class="colors" id="folderColorPicker">
+        <div class="color-dot selected" style="background:#6c63ff" data-color="#6c63ff"></div>
+        <div class="color-dot" style="background:#ff6584" data-color="#ff6584"></div>
+        <div class="color-dot" style="background:#43e97b" data-color="#43e97b"></div>
+        <div class="color-dot" style="background:#f9ca24" data-color="#f9ca24"></div>
+        <div class="color-dot" style="background:#74b9ff" data-color="#74b9ff"></div>
+        <div class="color-dot" style="background:#fd79a8" data-color="#fd79a8"></div>
+        <div class="color-dot" style="background:#00cec9" data-color="#00cec9"></div>
+        <div class="color-dot" style="background:#e17055" data-color="#e17055"></div>
+      </div>
+    </div>
+    <input type="hidden" id="folderEditId">
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="folderDeleteBtn" onclick="deleteFolder()" style="margin-right:auto;display:none">🗑️ ลบโฟล์เดอร์</button>
+      <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveFolder()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: MOVE FILE TO FOLDER -->
+<div class="modal" id="moveFileModal">
+  <div class="modal-box">
+    <div class="modal-title">📁 ย้ายไฟล์ไปโฟล์เดอร์</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px" id="moveFileNameLabel"></div>
+    <div id="moveFolderList" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto"></div>
+    <input type="hidden" id="moveFileId">
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ===== STATE =====
+let state = {
+  exam: { name: '', date: '', location: '', org: '', note: '' },
+  plans: [],
+  subjects: [],
+  files: [],
+  links: [],
+  notes: [],
+  timeblocks: [],
+  folders: [],
+  quizItems: [],
+  reminders: [],
+  goalLogs: [],
+  goalTarget: 4,
+  pomHistory: []
+};
+
+let editMode = false;
+let deferredInstall = null;
+let currentFolderId = null; // null = root (all files)
+
+// ===== INIT =====
+function init() {
+  loadState();
+  startClock();
+  renderAll();
+  setupFileDrop();
+  setupColorPicker();
+  initTBColorPicker();
+  setupInstallPrompt();
+  syncSettingsForm();
+  // Initialize TB
+  tbCursor = new Date();
+  renderTBNav();
+  // Initialize ECW
+  ecwLoadSaved();
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('examApp_state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state = { ...state, ...parsed };
+      // Keep only metadata (no binary) in state
+      if (state.files) {
+        state.files = state.files.filter(f => f && f.name).map(f => ({
+          id: f.id, name: f.name, size: f.size, type: f.type, addedAt: f.addedAt
+        }));
+      }
+    }
+  } catch(e) {
+    console.log('Load state error:', e);
+  }
+}
+
+function saveState() {
+  try {
+    // Save files as metadata only (actual file data is in IndexedDB)
+    const toSave = {
+      ...state,
+      files: state.files.map(f => ({ id: f.id, name: f.name, size: f.size, type: f.type, addedAt: f.addedAt }))
+    };
+    localStorage.setItem('examApp_state', JSON.stringify(toSave));
+    return true;
+  } catch(e) {
+    if (e.name === 'QuotaExceededError') {
+      showToast('⚠️ พื้นที่ localStorage เต็ม', 'warning');
+    } else {
+      showToast('❌ บันทึกไม่สำเร็จ: ' + e.message, 'danger');
+    }
+    return false;
+  }
+}
+
+function saveAll() {
+  if (saveState()) {
+    showToast('✅ บันทึกสำเร็จ!');
+  }
+}
+
+// ===== CLOCK =====
+const DAYS_TH = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+const MONTHS_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+function startClock() {
+  function tick() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clockTime').textContent = `${h}:${m}:${s}`;
+    
+    const day = DAYS_TH[now.getDay()];
+    const date = now.getDate();
+    const month = MONTHS_TH[now.getMonth()];
+    const year = now.getFullYear() + 543;
+    document.getElementById('clockDate').textContent = `${day} ${date} ${month} ${year}`;
+
+    updateCountdown();
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+function updateCountdown() {
+  const examDate = state.exam?.date;
+  const el = document.getElementById('countdownDays');
+  if (!examDate) { el.textContent = '—'; return; }
+  const diff = Math.ceil((new Date(examDate) - new Date()) / 86400000);
+  el.textContent = diff > 0 ? diff : diff === 0 ? 'วันนี้!' : 'ผ่านแล้ว';
+}
+
+// ===== PAGES =====
+const pageTitles = {
+  dashboard: '🏠 หน้าหลัก',
+  overview: '🗂️ ภาพรวมหัวข้อ',
+  clock: '⏰ นาฬิกา / นับถอยหลัง / จับเวลา',
+  plan: '📅 แผนการเรียน',
+  timeblock: '⏱️ Time Blocking',
+  subjects: '📖 วิชา & เนื้อหา',
+  files: '📎 ไฟล์แนบ',
+  notes: '📝 บันทึก & สรุป',
+  settings: '⚙️ ข้อมูลสนามสอบ',
+  analytics: '📊 สถิติการอ่าน',
+  quiz: '❓ แบบทดสอบตัวเอง',
+  reminder: '🔔 เตือนความจำ',
+  pomodoro: '🍅 Pomodoro Timer',
+  goals: '🎯 เป้าหมายรายวัน'
+};
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') === `showPage('${id}')`) n.classList.add('active');
+  });
+  document.getElementById('pageTitle').textContent = pageTitles[id] || '';
+
+  if (window.innerWidth < 768) closeSidebar();
+  if (id === 'overview') renderOverview();
+  if (id === 'clock') {
+    ecwLoadSaved(); renderEcwList();
+    // Pre-fill from exam settings if set
+    if (state.exam && state.exam.date && !document.getElementById('ecwDatetime').value) {
+      document.getElementById('ecwDatetime').value = state.exam.date + 'T05:30';
+      if (state.exam.name) document.getElementById('ecwName').value = state.exam.name;
+    }
+  }
+  if (id === 'dashboard') renderAll();
+  if (id === 'plan') renderPlanTable();
+  if (id === 'timeblock') { renderTBStats(); renderTBView(); }
+  if (id === 'subjects') renderSubjectList();
+  if (id === 'files') renderFilePage();
+  if (id === 'notes') renderNotes();
+  if (id === 'analytics') renderAnalytics();
+  if (id === 'quiz') renderQuizPage();
+  if (id === 'reminder') renderReminderPage();
+  if (id === 'pomodoro') initPomodoro();
+  if (id === 'goals') renderGoalsPage();
+}
+
+// ===== SIDEBAR =====
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('overlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ===== EDIT MODE =====
+function toggleEditMode() {
+  editMode = !editMode;
+  document.getElementById('editBtnText').textContent = editMode ? 'เสร็จ' : 'แก้ไข';
+  const panel = document.getElementById('editExamPanel');
+  if (editMode) {
+    panel.classList.add('open');
+    document.getElementById('examNameInput').value = state.exam.name;
+    document.getElementById('examDateInput').value = state.exam.date;
+    document.getElementById('examLocationInput').value = state.exam.location;
+    document.getElementById('examOrgInput').value = state.exam.org;
+    document.getElementById('examNoteInput').value = state.exam.note;
+    showToast('✏️ โหมดแก้ไขเปิดแล้ว');
+  } else {
+    panel.classList.remove('open');
+  }
+}
+
+function closeEditPanel() {
+  editMode = false;
+  document.getElementById('editBtnText').textContent = 'แก้ไข';
+  document.getElementById('editExamPanel').classList.remove('open');
+}
+
+function saveExamInfo() {
+  state.exam.name = document.getElementById('examNameInput').value;
+  state.exam.date = document.getElementById('examDateInput').value;
+  state.exam.location = document.getElementById('examLocationInput').value;
+  state.exam.org = document.getElementById('examOrgInput').value;
+  state.exam.note = document.getElementById('examNoteInput').value;
+  saveState();
+  renderExamBanner();
+  closeEditPanel();
+  showToast('✅ บันทึกข้อมูลสนามสอบแล้ว!');
+}
+
+function saveExamFromSettings() {
+  state.exam.name = document.getElementById('settingExamName').value;
+  state.exam.date = document.getElementById('settingExamDate').value;
+  state.exam.location = document.getElementById('settingExamLocation').value;
+  state.exam.org = document.getElementById('settingExamOrg').value;
+  state.exam.note = document.getElementById('settingExamNote').value;
+  saveState();
+  renderExamBanner();
+  showToast('✅ บันทึกข้อมูลสนามสอบแล้ว!');
+}
+
+function syncSettingsForm() {
+  document.getElementById('settingExamName').value = state.exam.name || '';
+  document.getElementById('settingExamDate').value = state.exam.date || '';
+  document.getElementById('settingExamLocation').value = state.exam.location || '';
+  document.getElementById('settingExamOrg').value = state.exam.org || '';
+  document.getElementById('settingExamNote').value = state.exam.note || '';
+}
+
+// ===== RENDER =====
+function renderAll() {
+  renderExamBanner();
+  renderStats();
+  renderWeekGrid();
+  renderSubjectProgress();
+}
+
+function renderExamBanner() {
+  const name = state.exam.name || '📋 ยังไม่ได้ตั้งชื่อสนามสอบ';
+  const dateStr = state.exam.date;
+  document.getElementById('examNameDisplay').textContent = name;
+
+  let sub = 'กดปุ่ม "แก้ไข" เพื่อตั้งค่า';
+  if (dateStr) {
+    const d = new Date(dateStr);
+    const thDate = `${d.getDate()} ${MONTHS_TH[d.getMonth()]} ${d.getFullYear()+543}`;
+    sub = `📅 วันสอบ: ${thDate}`;
+    if (state.exam.location) sub += ` · ${state.exam.location}`;
+  }
+  document.getElementById('examDateDisplay').textContent = sub;
+
+  let days = '?';
+  if (dateStr) {
+    const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+    days = diff > 0 ? diff : diff === 0 ? '🎯' : '✓';
+  }
+  document.getElementById('examDaysDisplay').textContent = days;
+}
+
+function renderStats() {
+  const today = new Date().toISOString().split('T')[0];
+  const todayPlans = state.plans.filter(p => p.date === today);
+  const donePlans = state.plans.filter(p => p.status === 'done');
+  document.getElementById('statToday').textContent = todayPlans.length;
+  document.getElementById('statDone').textContent = donePlans.length;
+  document.getElementById('statSubjects').textContent = state.subjects.length;
+  document.getElementById('statFiles').textContent = state.files.length;
+  document.getElementById('planBadge').textContent = todayPlans.filter(p => p.status !== 'done').length;
+}
+
+function renderWeekGrid() {
+  const grid = document.getElementById('weekGrid');
+  const today = new Date();
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+
+  const dayNames = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+  let html = '';
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate() + i);
+    const dateStr = d.toISOString().split('T')[0];
+    const isToday = dateStr === today.toISOString().split('T')[0];
+    const dayPlans = state.plans.filter(p => p.date === dateStr);
+    const doneCount = dayPlans.filter(p => p.status === 'done').length;
+    
+    let blockHtml = '';
+    if (dayPlans.length > 0) {
+      const colors = ['#6c63ff','#ff6584','#43e97b','#f9ca24'];
+      const color = doneCount === dayPlans.length ? '#43e97b' : '#6c63ff';
+      blockHtml = `<div class="day-block" style="background:${color}20;color:${color}" title="${doneCount}/${dayPlans.length}">${doneCount}/${dayPlans.length}</div>`;
+    }
+
+    html += `<div class="day-col">
+      <div class="day-header${isToday?' today':''}">${dayNames[i]}<br><span style="font-size:10px">${d.getDate()}</span></div>
+      ${blockHtml}
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function renderSubjectProgress() {
+  const el = document.getElementById('subjectProgressList');
+  if (!state.subjects.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📖</div><div class="empty-state-text">ยังไม่มีวิชา</div></div>`;
+    return;
+  }
+  el.innerHTML = state.subjects.map(s => `
+    <div class="subject-item">
+      <div class="subject-color" style="background:${s.color||'#6c63ff'}"></div>
+      <div class="subject-name">${s.name}</div>
+      <div class="subject-progress">${s.progress||0}%</div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width:${s.progress||0}%;background:${s.color||'#6c63ff'}"></div>
+    </div>
+  `).join('');
+}
+
+// ===== PLAN =====
+function renderPlanTable() {
+  const tbody = document.getElementById('planTableBody');
+  if (!state.plans.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-text">ยังไม่มีแผน กดปุ่ม + เพิ่มแผน</div></div></td></tr>`;
+    return;
+  }
+  const sorted = [...state.plans].sort((a,b) => (a.date+a.time) > (b.date+b.time) ? 1 : -1);
+  tbody.innerHTML = sorted.map(p => {
+    const statusMap = {
+      pending: '<span class="tag tag-warning">⏳ ยังไม่เริ่ม</span>',
+      inprogress: '<span class="tag tag-primary">🔄 กำลังเรียน</span>',
+      done: '<span class="tag tag-success">✅ เสร็จแล้ว</span>'
+    };
+    const d = p.date ? new Date(p.date) : null;
+    const dateStr = d ? `${d.getDate()} ${MONTHS_TH[d.getMonth()]}` : '—';
+    return `<tr>
+      <td>
+        <div class="check-done ${p.status==='done'?'checked':''}" onclick="togglePlanDone('${p.id}')">
+          ${p.status==='done'?'✓':''}
+        </div>
+      </td>
+      <td>${dateStr}</td>
+      <td style="font-weight:500">${p.subject||'—'}</td>
+      <td>${p.time||'—'} ${p.duration?'('+p.duration+')':''}</td>
+      <td>${statusMap[p.status]||''}</td>
+      <td>
+        <button class="btn btn-sm btn-outline" onclick="editPlan('${p.id}')" style="padding:4px 8px">✏️</button>
+        <button class="btn btn-sm" onclick="deletePlan('${p.id}')" style="background:var(--danger);color:#fff;padding:4px 8px;border-radius:8px;border:none;cursor:pointer;margin-left:4px">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openAddPlanModal() {
+  document.getElementById('planDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('planTime').value = '';
+  document.getElementById('planSubject').value = '';
+  document.getElementById('planDuration').value = '';
+  document.getElementById('planStatus').value = 'pending';
+  document.getElementById('planNote').value = '';
+  document.getElementById('planEditId').value = '';
+  openModal('planModal');
+}
+
+function editPlan(id) {
+  const p = state.plans.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('planDate').value = p.date || '';
+  document.getElementById('planTime').value = p.time || '';
+  document.getElementById('planSubject').value = p.subject || '';
+  document.getElementById('planDuration').value = p.duration || '';
+  document.getElementById('planStatus').value = p.status || 'pending';
+  document.getElementById('planNote').value = p.note || '';
+  document.getElementById('planEditId').value = id;
+  openModal('planModal');
+}
+
+function savePlan() {
+  const id = document.getElementById('planEditId').value || uid();
+  const plan = {
+    id,
+    date: document.getElementById('planDate').value,
+    time: document.getElementById('planTime').value,
+    subject: document.getElementById('planSubject').value,
+    duration: document.getElementById('planDuration').value,
+    status: document.getElementById('planStatus').value,
+    note: document.getElementById('planNote').value
+  };
+  const idx = state.plans.findIndex(p => p.id === id);
+  if (idx >= 0) state.plans[idx] = plan;
+  else state.plans.push(plan);
+  saveState();
+  renderPlanTable();
+  renderStats();
+  closeModal();
+  showToast('✅ บันทึกแผนแล้ว!');
+}
+
+function togglePlanDone(id) {
+  const p = state.plans.find(x => x.id === id);
+  if (!p) return;
+  p.status = p.status === 'done' ? 'pending' : 'done';
+  saveState();
+  renderPlanTable();
+  renderStats();
+}
+
+function deletePlan(id) {
+  if (!confirm('ลบแผนนี้?')) return;
+  state.plans = state.plans.filter(p => p.id !== id);
+  saveState();
+  renderPlanTable();
+  renderStats();
+  showToast('🗑️ ลบแผนแล้ว');
+}
+
+// ===== TIME BLOCKING =====
+let tbView = 'day';       // 'day' | 'week' | 'month'
+let tbCursor = new Date(); // current navigation date
+let tbSelectedColor = '#6c63ff';
+const TB_HOURS = Array.from({length: 18}, (_, i) => i + 5); // 05:00 – 22:00
+
+const TB_TYPE_COLORS = {
+  study:    '#6c63ff',
+  practice: '#ff6584',
+  review:   '#43e97b',
+  break:    '#74b9ff',
+  exam:     '#f9ca24',
+  other:    '#e17055'
+};
+const TB_TYPE_LABELS = {
+  study:'📚 อ่านหนังสือ', practice:'✏️ ทำโจทย์',
+  review:'🔄 ทบทวน', break:'☕ พักผ่อน',
+  exam:'🎯 สอบ', other:'📌 อื่น ๆ'
+};
+
+function initTBColorPicker() {
+  document.querySelectorAll('#tbColorPicker .color-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      document.querySelectorAll('#tbColorPicker .color-dot').forEach(d => d.classList.remove('selected'));
+      dot.classList.add('selected');
+      tbSelectedColor = dot.dataset.color;
+    });
+  });
+}
+
+function switchTBView(v) {
+  tbView = v;
+  ['day','week','month'].forEach(x => {
+    document.getElementById('tbTab'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active', x===v);
+    document.getElementById('tb'+x.charAt(0).toUpperCase()+x.slice(1)+'View').style.display = x===v ? '' : 'none';
+  });
+  renderTBNav();
+  renderTBView();
+}
+
+function tbNavigate(dir) {
+  if (tbView === 'day') tbCursor.setDate(tbCursor.getDate() + dir);
+  else if (tbView === 'week') tbCursor.setDate(tbCursor.getDate() + dir*7);
+  else tbCursor.setMonth(tbCursor.getMonth() + dir);
+  tbCursor = new Date(tbCursor); // clone
+  renderTBNav();
+  renderTBView();
+}
+
+function tbGoToday() {
+  tbCursor = new Date();
+  renderTBNav();
+  renderTBView();
+}
+
+function renderTBNav() {
+  const t = document.getElementById('tbNavTitle');
+  if (tbView === 'day') {
+    const d = tbCursor;
+    t.textContent = `${DAYS_TH[d.getDay()]} ${d.getDate()} ${MONTHS_TH[d.getMonth()]} ${d.getFullYear()+543}`;
+  } else if (tbView === 'week') {
+    const mon = getWeekStart(tbCursor);
+    const sun = new Date(mon); sun.setDate(mon.getDate()+6);
+    t.textContent = `${mon.getDate()} ${MONTHS_TH[mon.getMonth()]} – ${sun.getDate()} ${MONTHS_TH[sun.getMonth()]} ${sun.getFullYear()+543}`;
+  } else {
+    t.textContent = `${MONTHS_TH[tbCursor.getMonth()]} ${tbCursor.getFullYear()+543}`;
+  }
+}
+
+function getWeekStart(d) {
+  const r = new Date(d);
+  const day = r.getDay(); // 0=Sun
+  r.setDate(r.getDate() - day); // Go to Sunday
+  return r;
+}
+
+function dateStr(d) {
+  return d.toISOString().split('T')[0];
+}
+
+function renderTBView() {
+  renderTBNav();
+  if (tbView === 'day') renderTBDay();
+  else if (tbView === 'week') renderTBWeek();
+  else renderTBMonth();
+}
+
+// ---- DAY VIEW ----
+function renderTBDay() {
+  const grid = document.getElementById('tbDayGrid');
+  const todayStr = dateStr(tbCursor);
+  const blocksForDay = (state.timeblocks||[]).filter(b => b.date === todayStr);
+  const nowStr = dateStr(new Date());
+  const isToday = todayStr === nowStr;
+
+  let html = '';
+  TB_HOURS.forEach(h => {
+    const hStr = String(h).padStart(2,'0') + ':00';
+    html += `<div class="tb-hour-label">${hStr}</div>`;
+    html += `<div class="tb-hour-slot" onclick="openTBModalAt('${todayStr}','${hStr}')" data-hour="${h}">
+      <div class="tb-half-line"></div>
+    </div>`;
+  });
+
+  grid.innerHTML = html;
+
+  // Place blocks
+  blocksForDay.forEach(b => {
+    placeBlockInDay(b, grid);
+  });
+
+  // Current time line
+  if (isToday) {
+    const now = new Date();
+    const totalMinFromStart = (now.getHours() - TB_HOURS[0]) * 60 + now.getMinutes();
+    if (totalMinFromStart >= 0 && totalMinFromStart <= TB_HOURS.length * 60) {
+      const slots = grid.querySelectorAll('.tb-hour-slot');
+      const firstSlot = slots[0];
+      if (firstSlot) {
+        const slotH = firstSlot.offsetHeight || 56;
+        const topPx = totalMinFromStart * (slotH / 60);
+        const line = document.createElement('div');
+        line.className = 'tb-current-time';
+        line.style.top = topPx + 'px';
+        // Put inside the grid container
+        const container = grid.parentElement;
+        container.style.position = 'relative';
+        container.appendChild(line);
+        // scroll to current time
+        setTimeout(() => {
+          const scroll = document.getElementById('tbDayScroll');
+          if (scroll) scroll.scrollTop = Math.max(0, topPx - 120);
+        }, 50);
+      }
+    }
+  }
+}
+
+function placeBlockInDay(b, grid) {
+  if (!b.startTime || !b.endTime) return;
+  const [sh, sm] = b.startTime.split(':').map(Number);
+  const [eh, em] = b.endTime.split(':').map(Number);
+  if (sh < TB_HOURS[0] || sh > TB_HOURS[TB_HOURS.length-1]) return;
+  const slots = grid.querySelectorAll('.tb-hour-slot');
+  const firstHour = TB_HOURS[0];
+  const slotH = (slots[0] && slots[0].offsetHeight) || 56;
+  const startMin = (sh - firstHour) * 60 + sm;
+  const endMin = (eh - firstHour) * 60 + em;
+  const dur = Math.max(endMin - startMin, 15);
+  const topPx = startMin * (slotH / 60) + 1;
+  const heightPx = dur * (slotH / 60) - 2;
+  const slotIdx = sh - firstHour;
+  if (slotIdx < 0 || slotIdx >= slots.length) return;
+  const targetSlot = slots[slotIdx];
+  const color = b.color || TB_TYPE_COLORS[b.type] || '#6c63ff';
+  const block = document.createElement('div');
+  block.className = 'tb-block';
+  block.style.cssText = `top:${topPx}px;height:${heightPx}px;background:${color}22;color:${color};border-left-color:${color}`;
+  block.innerHTML = `<div class="tb-block-title">${b.subject||'ไม่มีชื่อ'}</div><div class="tb-block-time">${b.startTime}–${b.endTime}</div>`;
+  block.onclick = (e) => { e.stopPropagation(); editTB(b.id); };
+  targetSlot.appendChild(block);
+}
+
+// ---- WEEK VIEW ----
+function renderTBWeek() {
+  const grid = document.getElementById('tbWeekGrid');
+  const weekStart = getWeekStart(tbCursor);
+  const todayStr = dateStr(new Date());
+  const days = Array.from({length:7}, (_,i) => { const d = new Date(weekStart); d.setDate(weekStart.getDate()+i); return d; });
+
+  let html = '<div class="tb-week-header-empty"></div>';
+  days.forEach(d => {
+    const isToday = dateStr(d) === todayStr;
+    html += `<div class="tb-week-header${isToday?' today-col':''}">${DAYS_TH[d.getDay()]}<br><span style="font-size:14px;font-weight:800">${d.getDate()}</span></div>`;
+  });
+
+  TB_HOURS.forEach(h => {
+    html += `<div class="tb-week-hour-label">${String(h).padStart(2,'0')}:00</div>`;
+    days.forEach(d => {
+      const ds = dateStr(d);
+      html += `<div class="tb-week-cell" onclick="openTBModalAt('${ds}','${String(h).padStart(2,'0')}:00')" data-date="${ds}" data-hour="${h}"></div>`;
+    });
+  });
+
+  grid.innerHTML = html;
+
+  // Place blocks
+  (state.timeblocks||[]).forEach(b => {
+    const dayIdx = days.findIndex(d => dateStr(d) === b.date);
+    if (dayIdx < 0 || !b.startTime || !b.endTime) return;
+    const [sh] = b.startTime.split(':').map(Number);
+    const hIdx = TB_HOURS.indexOf(sh);
+    if (hIdx < 0) return;
+    // Find the cell: row = hIdx, col = dayIdx
+    const cells = grid.querySelectorAll('.tb-week-cell');
+    const cellIdx = hIdx * 7 + dayIdx;
+    if (cellIdx >= cells.length) return;
+    const cell = cells[cellIdx];
+    const color = b.color || TB_TYPE_COLORS[b.type] || '#6c63ff';
+    const blk = document.createElement('div');
+    blk.className = 'tb-week-block';
+    blk.style.cssText = `background:${color}25;color:${color};border-left:3px solid ${color}`;
+    blk.textContent = b.subject || '—';
+    blk.title = `${b.startTime}–${b.endTime} ${b.subject||''}`;
+    blk.onclick = (e) => { e.stopPropagation(); editTB(b.id); };
+    cell.appendChild(blk);
+  });
+}
+
+// ---- MONTH VIEW ----
+function renderTBMonth() {
+  const grid = document.getElementById('tbMonthGrid');
+  const todayStr = dateStr(new Date());
+  const year = tbCursor.getFullYear();
+  const month = tbCursor.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month+1, 0);
+  const startDay = firstDay.getDay(); // 0=Sun
+
+  const dayHeaders = ['อา','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+  let html = dayHeaders.map(d => `<div class="tb-month-day-header">${d}</div>`).join('');
+
+  // Pad before
+  const prevMonth = new Date(year, month, 0);
+  for (let i = startDay-1; i >= 0; i--) {
+    const d = prevMonth.getDate() - i;
+    html += `<div class="tb-month-cell other-month"><div class="tb-month-date">${d}</div></div>`;
+  }
+
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const cellDate = new Date(year, month, d);
+    const ds = dateStr(cellDate);
+    const isToday = ds === todayStr;
+    const dayBlocks = (state.timeblocks||[]).filter(b => b.date === ds);
+    const maxShow = 2;
+    let eventsHtml = dayBlocks.slice(0, maxShow).map(b => {
+      const color = b.color || TB_TYPE_COLORS[b.type] || '#6c63ff';
+      return `<span class="tb-month-event" style="background:${color}20;color:${color}" onclick="event.stopPropagation();editTB('${b.id}')">${b.subject||'—'}</span>`;
+    }).join('');
+    if (dayBlocks.length > maxShow) eventsHtml += `<div class="tb-month-more">+${dayBlocks.length-maxShow} อื่น ๆ</div>`;
+    html += `<div class="tb-month-cell${isToday?' today-cell':''}" onclick="openTBModalAt('${ds}','08:00')">
+      <div class="tb-month-date">${d}</div>
+      ${eventsHtml}
+    </div>`;
+  }
+
+  // Pad after
+  const endDay = lastDay.getDay();
+  for (let i = 1; i < 7-endDay; i++) {
+    html += `<div class="tb-month-cell other-month"><div class="tb-month-date">${i}</div></div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+// ---- STATS ----
+function renderTBStats() {
+  const todayStr = dateStr(new Date());
+  const all = state.timeblocks||[];
+  const todayBlocks = all.filter(b => b.date === todayStr);
+  const totalMin = all.reduce((s,b) => {
+    if (!b.startTime||!b.endTime) return s;
+    const [sh,sm]=b.startTime.split(':').map(Number);
+    const [eh,em]=b.endTime.split(':').map(Number);
+    return s + Math.max(0,(eh*60+em)-(sh*60+sm));
+  }, 0);
+  const todayMin = todayBlocks.reduce((s,b) => {
+    if (!b.startTime||!b.endTime) return s;
+    const [sh,sm]=b.startTime.split(':').map(Number);
+    const [eh,em]=b.endTime.split(':').map(Number);
+    return s + Math.max(0,(eh*60+em)-(sh*60+sm));
+  }, 0);
+  const thisWeekStart = getWeekStart(new Date());
+  const weekBlocks = all.filter(b => {
+    if (!b.date) return false;
+    const d = new Date(b.date);
+    const ws = getWeekStart(new Date());
+    const we = new Date(ws); we.setDate(ws.getDate()+6);
+    return d >= ws && d <= we;
+  });
+  const weekMin = weekBlocks.reduce((s,b) => {
+    if (!b.startTime||!b.endTime) return s;
+    const [sh,sm]=b.startTime.split(':').map(Number);
+    const [eh,em]=b.endTime.split(':').map(Number);
+    return s + Math.max(0,(eh*60+em)-(sh*60+sm));
+  }, 0);
+
+  const fmtHr = m => m >= 60 ? `${(m/60).toFixed(1)} ชม.` : `${m} น.`;
+
+  document.getElementById('tbStatsRow').innerHTML = `
+    <div class="tb-stat-mini"><div class="tb-stat-mini-label">⏱️ วันนี้</div><div class="tb-stat-mini-val" style="color:var(--primary)">${fmtHr(todayMin)}</div></div>
+    <div class="tb-stat-mini"><div class="tb-stat-mini-label">📅 สัปดาห์นี้</div><div class="tb-stat-mini-val" style="color:var(--accent2)">${fmtHr(weekMin)}</div></div>
+    <div class="tb-stat-mini"><div class="tb-stat-mini-label">📚 รวม Block</div><div class="tb-stat-mini-val" style="color:var(--accent)">${all.length}</div></div>
+    <div class="tb-stat-mini"><div class="tb-stat-mini-label">🎯 วันนี้ Block</div><div class="tb-stat-mini-val" style="color:var(--warning)">${todayBlocks.length}</div></div>
+  `;
+}
+
+// ---- MODAL ----
+function openTBModal(dateVal, timeVal) {
+  document.getElementById('tbSubject').value = '';
+  document.getElementById('tbDate').value = dateVal || dateStr(tbView==='day'?tbCursor:new Date());
+  document.getElementById('tbStartTime').value = timeVal || '08:00';
+  // auto end = start + 1hr
+  if (timeVal) {
+    const [h,m] = timeVal.split(':').map(Number);
+    const endH = String(Math.min(h+1,23)).padStart(2,'0');
+    document.getElementById('tbEndTime').value = `${endH}:${String(m).padStart(2,'0')}`;
+  } else {
+    document.getElementById('tbEndTime').value = '09:00';
+  }
+  document.getElementById('tbType').value = 'study';
+  document.getElementById('tbNote').value = '';
+  document.getElementById('tbEditId').value = '';
+  document.getElementById('tbDeleteBtn').style.display = 'none';
+  tbSelectedColor = '#6c63ff';
+  document.querySelectorAll('#tbColorPicker .color-dot').forEach(d => d.classList.toggle('selected', d.dataset.color==='#6c63ff'));
+  openModal('tbModal');
+}
+
+function openTBModalAt(dateVal, timeVal) {
+  openTBModal(dateVal, timeVal);
+}
+
+function editTB(id) {
+  const b = (state.timeblocks||[]).find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('tbSubject').value = b.subject || '';
+  document.getElementById('tbDate').value = b.date || '';
+  document.getElementById('tbStartTime').value = b.startTime || '';
+  document.getElementById('tbEndTime').value = b.endTime || '';
+  document.getElementById('tbType').value = b.type || 'study';
+  document.getElementById('tbNote').value = b.note || '';
+  document.getElementById('tbEditId').value = id;
+  document.getElementById('tbDeleteBtn').style.display = 'inline-flex';
+  tbSelectedColor = b.color || '#6c63ff';
+  document.querySelectorAll('#tbColorPicker .color-dot').forEach(d => d.classList.toggle('selected', d.dataset.color === tbSelectedColor));
+  openModal('tbModal');
+}
+
+function saveTB() {
+  const subject = document.getElementById('tbSubject').value.trim();
+  if (!subject) { showToast('⚠️ กรุณาใส่ชื่อ', 'warning'); return; }
+  const startTime = document.getElementById('tbStartTime').value;
+  const endTime = document.getElementById('tbEndTime').value;
+  if (startTime && endTime && startTime >= endTime) {
+    showToast('⚠️ เวลาสิ้นสุดต้องมากกว่าเวลาเริ่ม', 'warning'); return;
+  }
+  if (!state.timeblocks) state.timeblocks = [];
+  const id = document.getElementById('tbEditId').value || uid();
+  const blk = {
+    id, subject,
+    date: document.getElementById('tbDate').value,
+    startTime,
+    endTime,
+    type: document.getElementById('tbType').value,
+    color: tbSelectedColor,
+    note: document.getElementById('tbNote').value
+  };
+  const idx = state.timeblocks.findIndex(b => b.id === id);
+  if (idx >= 0) state.timeblocks[idx] = blk;
+  else state.timeblocks.push(blk);
+  saveState();
+  closeModal();
+  renderTBStats();
+  renderTBView();
+  showToast('✅ บันทึก Time Block แล้ว!');
+}
+
+function deleteTB() {
+  const id = document.getElementById('tbEditId').value;
+  if (!id) return;
+  if (!confirm('ลบ Time Block นี้?')) return;
+  state.timeblocks = (state.timeblocks||[]).filter(b => b.id !== id);
+  saveState();
+  closeModal();
+  renderTBStats();
+  renderTBView();
+  showToast('🗑️ ลบแล้ว');
+}
+
+// ===== SUBJECTS =====
+let selectedColor = '#6c63ff';
+
+function setupColorPicker() {
+  document.querySelectorAll('.color-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+      dot.classList.add('selected');
+      selectedColor = dot.dataset.color;
+    });
+  });
+}
+
+function renderSubjectList() {
+  const el = document.getElementById('subjectList');
+  if (!state.subjects.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📖</div><div class="empty-state-text">ยังไม่มีวิชา</div></div>`;
+    return;
+  }
+  el.innerHTML = state.subjects.map(s => `
+    <div class="subject-item" style="padding:14px 0">
+      <div class="subject-color" style="background:${s.color||'#6c63ff'};width:16px;height:16px;border-radius:4px"></div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px">${s.name}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${s.weight||''} ${s.topics?'· '+s.topics.slice(0,60)+(s.topics.length>60?'...':''):''}</div>
+        <div class="progress-bar" style="margin-top:6px">
+          <div class="progress-fill" style="width:${s.progress||0}%;background:${s.color||'#6c63ff'}"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${s.progress||0}%</div>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-sm btn-outline" onclick="editSubject('${s.id}')">✏️</button>
+        <button class="btn btn-sm" onclick="deleteSubject('${s.id}')" style="background:var(--danger);color:#fff;border-radius:8px;border:none;cursor:pointer;padding:5px 8px">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddSubjectModal() {
+  document.getElementById('subjectName').value = '';
+  document.getElementById('subjectWeight').value = '';
+  document.getElementById('subjectTopics').value = '';
+  document.getElementById('subjectProgress').value = '';
+  document.getElementById('subjectEditId').value = '';
+  document.getElementById('subjectCode').value = '';
+  document.getElementById('subjectGroup').value = '';
+  document.getElementById('subjectGroupLabel').value = '';
+  selectedColor = '#6c63ff';
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+  document.querySelector('.color-dot').classList.add('selected');
+  openModal('subjectModal');
+}
+
+function editSubject(id) {
+  const s = state.subjects.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById('subjectName').value = s.name || '';
+  document.getElementById('subjectWeight').value = s.weight || '';
+  document.getElementById('subjectTopics').value = s.topics || '';
+  document.getElementById('subjectProgress').value = s.progress || 0;
+  document.getElementById('subjectEditId').value = id;
+  document.getElementById('subjectCode').value = s.code || '';
+  document.getElementById('subjectGroup').value = s.group || '';
+  document.getElementById('subjectGroupLabel').value = s.groupLabel || '';
+  selectedColor = s.color || '#6c63ff';
+  document.querySelectorAll('.color-dot').forEach(d => {
+    d.classList.toggle('selected', d.dataset.color === selectedColor);
+  });
+  openModal('subjectModal');
+}
+
+function saveSubject() {
+  const name = document.getElementById('subjectName').value.trim();
+  if (!name) { showToast('⚠️ กรุณาใส่ชื่อวิชา','warning'); return; }
+  const id = document.getElementById('subjectEditId').value || uid();
+  const existing = state.subjects.find(s => s.id === id) || {};
+  const sub = {
+    id, name,
+    code: document.getElementById('subjectCode').value.trim(),
+    group: document.getElementById('subjectGroup').value.trim(),
+    groupLabel: document.getElementById('subjectGroupLabel').value.trim(),
+    weight: document.getElementById('subjectWeight').value,
+    topics: document.getElementById('subjectTopics').value,
+    progress: parseInt(document.getElementById('subjectProgress').value) || 0,
+    color: selectedColor,
+    rounds: existing.rounds || [false,false,false],
+    stars: existing.stars || 0
+  };
+  const idx = state.subjects.findIndex(s => s.id === id);
+  if (idx >= 0) state.subjects[idx] = sub;
+  else state.subjects.push(sub);
+  saveState();
+  renderSubjectList();
+  renderSubjectProgress();
+  renderStats();
+  if (document.getElementById('page-overview').classList.contains('active')) renderOverview();
+  closeSubjectModal();
+  showToast('✅ บันทึกวิชาแล้ว!');
+}
+
+function deleteSubject(id) {
+  if (!confirm('ลบวิชานี้?')) return;
+  state.subjects = state.subjects.filter(s => s.id !== id);
+  saveState();
+  renderSubjectList();
+  renderSubjectProgress();
+  renderStats();
+  if (document.getElementById('page-overview').classList.contains('active')) renderOverview();
+  showToast('🗑️ ลบวิชาแล้ว');
+}
+
+// ===== INDEXEDDB FOR FILES =====
+let db = null;
+
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('examAppDB', 1);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('files')) {
+        d.createObjectStore('files', { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = e => { db = e.target.result; resolve(); };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbSaveFile(fileData) {
+  return new Promise((resolve, reject) => {
+    if (!db) { resolve(); return; }
+    const tx = db.transaction('files', 'readwrite');
+    tx.objectStore('files').put(fileData);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+function dbDeleteFile(id) {
+  return new Promise((resolve, reject) => {
+    if (!db) { resolve(); return; }
+    const tx = db.transaction('files', 'readwrite');
+    tx.objectStore('files').delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+function dbGetAllFiles() {
+  return new Promise((resolve, reject) => {
+    if (!db) { resolve([]); return; }
+    const tx = db.transaction('files', 'readonly');
+    const req = tx.objectStore('files').getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => resolve([]);
+  });
+}
+
+// ===== FILES =====
+function setupFileDrop() {
+  const zone = document.getElementById('dropZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    handleFileSelect(e.dataTransfer.files);
+  });
+}
+
+function handleFileSelect(fileList) {
+  Array.from(fileList).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const fileData = {
+        id: uid(),
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        dataUrl: e.target.result,
+        addedAt: new Date().toISOString()
+      };
+      try {
+        await dbSaveFile(fileData);
+        // Also keep metadata in state for count
+        state.files.push({ id: fileData.id, name: fileData.name, size: fileData.size, type: fileData.type, addedAt: fileData.addedAt, folderId: currentFolderId || null });
+        saveState();
+        renderFileList();
+        renderFolderTabs();
+        renderFolderGrid();
+        renderStats();
+        showToast(`✅ เพิ่มไฟล์ "${file.name}" แล้ว!`);
+      } catch(err) {
+        showToast('❌ บันทึกไฟล์ไม่สำเร็จ: ' + err.message, 'danger');
+      }
+    };
+    reader.onerror = () => showToast('❌ อ่านไฟล์ไม่สำเร็จ','danger');
+    reader.readAsDataURL(file);
+  });
+}
+
+async function renderFileList() {
+  const el = document.getElementById('fileList');
+  if (!el) return;
+  const dbFiles = await dbGetAllFiles();
+  // Merge: dbFiles has dataUrl, state.files has metadata
+  const allFiles = state.files.map(f => {
+    const dbF = dbFiles.find(d => d.id === f.id);
+    return dbF ? { ...f, ...dbF } : f;
+  });
+
+  // Filter by current folder
+  const filtered = currentFolderId
+    ? allFiles.filter(f => f.folderId === currentFolderId)
+    : allFiles;
+
+  if (!filtered.length) {
+    el.innerHTML = `<div class="empty-state" style="padding:20px 0">
+      <div class="empty-state-icon">📄</div>
+      <div class="empty-state-text">${currentFolderId ? 'ยังไม่มีไฟล์ในโฟล์เดอร์นี้' : 'ยังไม่มีไฟล์'}</div>
+    </div>`;
+    return;
+  }
+  const icons = { 'image': '🖼️', 'pdf': '📄', 'video': '🎬', 'audio': '🎵', 'text': '📃' };
+  el.innerHTML = filtered.map(f => {
+    const icon = Object.entries(icons).find(([k]) => f.type && f.type.includes(k))?.[1] || '📎';
+    const sizeStr = f.size > 1024*1024 ? (f.size/1024/1024).toFixed(1)+'MB' : f.size > 1024 ? Math.round(f.size/1024)+'KB' : f.size+'B';
+    const downloadAttr = f.dataUrl ? `href="${f.dataUrl}" download="${f.name}"` : '';
+    const hasData = !!f.dataUrl;
+    const folderBadge = f.folderId && !currentFolderId ? (() => {
+      const fld = (state.folders||[]).find(x => x.id === f.folderId);
+      return fld ? `<span style="font-size:10px;background:${fld.color}22;color:${fld.color};padding:2px 6px;border-radius:8px;font-weight:600">${fld.icon} ${fld.name}</span>` : '';
+    })() : '';
+    return `<div class="file-item">
+      <div class="file-icon">${icon}</div>
+      <div class="file-name">${hasData ? `<a ${downloadAttr} style="color:var(--primary);text-decoration:none">${f.name}</a>` : f.name}</div>
+      ${folderBadge}
+      <div class="file-size">${sizeStr}</div>
+      ${!hasData ? '<span style="font-size:10px;color:var(--warning)">⚠️ ไม่มีข้อมูล</span>' : '<span style="font-size:10px;color:var(--success)">✅</span>'}
+      <button onclick="openMoveFileModal('${f.id}', '${f.name.replace(/'/g,"\\'")}'')" title="ย้ายไปโฟล์เดอร์" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px 5px;border-radius:6px;color:var(--text-muted)" onmouseover="this.style.background='rgba(108,99,255,0.1)'" onmouseout="this.style.background='none'">📁</button>
+      <div class="file-delete" onclick="deleteFile('${f.id}')">✕</div>
+    </div>`;
+  }).join('');
+}
+
+async function deleteFile(id) {
+  await dbDeleteFile(id);
+  state.files = state.files.filter(f => f.id !== id);
+  saveState();
+  renderFilePage();
+  renderStats();
+  showToast('🗑️ ลบไฟล์แล้ว');
+}
+
+// ===== OVERVIEW PAGE =====
+let ovActiveGroup = 'all';
+
+function renderOverview() {
+  renderOvFilterTabs();
+  renderOvContent();
+}
+
+function renderOvFilterTabs() {
+  const el = document.getElementById('ovFilterTabs');
+  if (!el) return;
+  // Collect groups
+  const groups = ['all'];
+  state.subjects.forEach(s => { if (s.group && !groups.includes(s.group)) groups.push(s.group); });
+  el.innerHTML = groups.map(g => {
+    const label = g === 'all' ? '✦ ทั้งหมด' : g;
+    const count = g === 'all' ? state.subjects.length : state.subjects.filter(s => s.group === g).length;
+    return `<button class="ov-filter-tab ${ovActiveGroup===g?'active':''}" onclick="ovSetGroup('${g}')">${label} <span style="opacity:0.7">(${count})</span></button>`;
+  }).join('');
+}
+
+function ovSetGroup(g) {
+  ovActiveGroup = g;
+  renderOverview();
+}
+
+function renderOvContent() {
+  const el = document.getElementById('ovContent');
+  if (!el) return;
+  if (!state.subjects.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🗂️</div><div class="empty-state-text">ยังไม่มีหัวข้อ กด "+ เพิ่มหัวข้อ" เพื่อเริ่มต้น</div></div>`;
+    return;
+  }
+
+  // Filter subjects
+  const filtered = ovActiveGroup === 'all' ? state.subjects : state.subjects.filter(s => s.group === ovActiveGroup);
+
+  // Group by group key
+  const groupMap = {};
+  const groupLabelMap = {};
+  filtered.forEach(s => {
+    const g = s.group || '';
+    if (!groupMap[g]) groupMap[g] = [];
+    groupMap[g].push(s);
+    if (s.groupLabel) groupLabelMap[g] = s.groupLabel;
+  });
+
+  // Sort groups: named first by key, unnamed last
+  const groupKeys = Object.keys(groupMap).sort((a, b) => {
+    if (!a && b) return 1;
+    if (a && !b) return -1;
+    return a.localeCompare(b);
+  });
+
+  el.innerHTML = groupKeys.map(gk => {
+    const subjects = groupMap[gk];
+    const count = subjects.length;
+    const gLabel = groupLabelMap[gk] ? `${gk} — ${groupLabelMap[gk]} (${count} หัวข้อ)` : gk ? `${gk} (${count} หัวข้อ)` : `ไม่มีกลุ่ม (${count} หัวข้อ)`;
+    return `<div class="ov-group-section">
+      <div class="ov-group-label">${gLabel}</div>
+      <div class="ov-grid">${subjects.map(s => renderOvCard(s)).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderOvCard(s) {
+  const rounds = s.rounds || [false, false, false];
+  const stars = s.stars || 0;
+  const roundBtns = [1,2,3].map(n => {
+    const done = rounds[n-1];
+    return `<button class="ov-round-btn r${n} ${done?'done':''}" onclick="ovToggleRound('${s.id}',${n-1})" title="รอบที่ ${n}">${n}</button>`;
+  }).join('');
+  const starHtml = [1,2,3,4,5].map(n =>
+    `<span class="ov-star" onclick="ovSetStar('${s.id}',${n})" title="${n} ดาว">${n<=stars?'★':'☆'}</span>`
+  ).join('');
+  const codeHtml = s.code ? `<span class="ov-card-code">${s.code}</span>` : '';
+  return `<div class="ov-card">
+    <div class="ov-card-top">
+      ${codeHtml}
+      <div class="ov-card-rounds">${roundBtns}</div>
+    </div>
+    <div class="ov-card-name">${s.name}</div>
+    <div class="ov-stars" style="color:${s.stars>0?'#f9ca24':'#ccc'}">${starHtml}</div>
+    <button class="ov-card-edit-btn" onclick="event.stopPropagation();editSubject('${s.id}')">✏️ แก้ไข</button>
+  </div>`;
+}
+
+function ovToggleRound(subjectId, roundIdx) {
+  const s = state.subjects.find(x => x.id === subjectId);
+  if (!s) return;
+  if (!s.rounds) s.rounds = [false,false,false];
+  s.rounds[roundIdx] = !s.rounds[roundIdx];
+  // Update progress based on rounds done
+  const doneRounds = s.rounds.filter(Boolean).length;
+  s.progress = Math.round((doneRounds / 3) * 100);
+  saveState();
+  // Re-render just this card efficiently
+  renderOverview();
+  renderSubjectProgress();
+}
+
+function ovSetStar(subjectId, starCount) {
+  const s = state.subjects.find(x => x.id === subjectId);
+  if (!s) return;
+  s.stars = (s.stars === starCount) ? 0 : starCount; // toggle off if same
+  saveState();
+  renderOverview();
+}
+
+// ===== CLOCK PAGE =====
+
+// --- Countdown Timer ---
+let cdInterval = null;
+let cdRemaining = 0;
+let cdRunning = false;
+
+function cdGetSet() {
+  const h = parseInt(document.getElementById('cdHour').value)||0;
+  const m = parseInt(document.getElementById('cdMin').value)||0;
+  const s = parseInt(document.getElementById('cdSec').value)||0;
+  return h*3600 + m*60 + s;
+}
+
+function cdFormatTime(sec) {
+  const h = Math.floor(sec/3600);
+  const m = Math.floor((sec%3600)/60);
+  const s = sec%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function cdUpdateDisplay() {
+  document.getElementById('cdDisplay').textContent = cdFormatTime(cdRemaining);
+}
+
+function cdToggle() {
+  if (cdRunning) {
+    clearInterval(cdInterval);
+    cdRunning = false;
+    document.getElementById('cdStartBtn').textContent = '▶ ต่อ';
+    document.getElementById('cdStartBtn').className = 'cw-btn-main purple';
+  } else {
+    if (!cdRemaining) cdRemaining = cdGetSet();
+    if (!cdRemaining) return;
+    cdRunning = true;
+    document.getElementById('cdStartBtn').innerHTML = '⏸ หยุด';
+    cdInterval = setInterval(() => {
+      cdRemaining--;
+      cdUpdateDisplay();
+      if (cdRemaining <= 0) {
+        clearInterval(cdInterval);
+        cdRunning = false;
+        document.getElementById('cdStartBtn').innerHTML = '▶ เริ่ม';
+        document.getElementById('cdDisplay').textContent = '⏰ หมดเวลา!';
+        showToast('⏰ หมดเวลาแล้ว!', 'warning');
+        try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA').play(); } catch(e){}
+      }
+    }, 1000);
+  }
+}
+
+function cdReset() {
+  clearInterval(cdInterval);
+  cdRunning = false;
+  cdRemaining = 0;
+  document.getElementById('cdStartBtn').innerHTML = '▶ เริ่ม';
+  const total = cdGetSet();
+  document.getElementById('cdDisplay').textContent = cdFormatTime(total);
+}
+
+// --- Stopwatch ---
+let swInterval = null;
+let swRunning = false;
+let swMs = 0;
+let swLapStart = 0;
+let swLaps = [];
+
+function swFormatMs(ms) {
+  const h = Math.floor(ms/3600000);
+  const m = Math.floor((ms%3600000)/60000);
+  const s = Math.floor((ms%60000)/1000);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function swToggle() {
+  if (swRunning) {
+    clearInterval(swInterval);
+    swRunning = false;
+    document.getElementById('swStartBtn').innerHTML = '▶ ต่อ';
+    document.getElementById('swStartBtn').className = 'cw-btn-main green';
+  } else {
+    swRunning = true;
+    const start = Date.now() - swMs;
+    swInterval = setInterval(() => {
+      swMs = Date.now() - start;
+      document.getElementById('swDisplay').textContent = swFormatMs(swMs);
+    }, 50);
+    document.getElementById('swStartBtn').innerHTML = '⏸ หยุด';
+    document.getElementById('swLapBtn').style.display = 'flex';
+  }
+}
+
+function swLap() {
+  if (!swRunning) return;
+  const lapTime = swMs - swLapStart;
+  swLaps.unshift({ n: swLaps.length+1, time: swMs, diff: lapTime });
+  swLapStart = swMs;
+  renderSwLaps();
+}
+
+function renderSwLaps() {
+  const el = document.getElementById('swLaps');
+  if (!el) return;
+  el.innerHTML = swLaps.map(l => `
+    <div class="sw-lap-item">
+      <span class="sw-lap-num">#${l.n}</span>
+      <span class="sw-lap-time">${swFormatMs(l.time)}</span>
+      <span class="sw-lap-diff">+${swFormatMs(l.diff)}</span>
+    </div>
+  `).join('');
+}
+
+function swReset() {
+  clearInterval(swInterval);
+  swRunning = false;
+  swMs = 0; swLapStart = 0; swLaps = [];
+  document.getElementById('swDisplay').textContent = '00:00:00';
+  document.getElementById('swStartBtn').innerHTML = '▶ เริ่ม';
+  document.getElementById('swStartBtn').className = 'cw-btn-main green';
+  document.getElementById('swLapBtn').style.display = 'none';
+  renderSwLaps();
+}
+
+// --- Exam Countdown ---
+let ecwCountdowns = [];
+
+function ecwLoadSaved() {
+  try { ecwCountdowns = JSON.parse(localStorage.getItem('ecw_countdowns') || '[]'); } catch(e) { ecwCountdowns = []; }
+}
+
+function ecwSave() {
+  localStorage.setItem('ecw_countdowns', JSON.stringify(ecwCountdowns));
+}
+
+function ecwAdd() {
+  const name = document.getElementById('ecwName').value.trim() || 'การสอบ';
+  const dt = document.getElementById('ecwDatetime').value;
+  if (!dt) { showToast('⚠️ กรุณาเลือกวันและเวลาสอบ', 'warning'); return; }
+  const entry = { id: uid(), name, datetime: dt };
+  ecwCountdowns.unshift(entry);
+  ecwSave();
+  ecwShowResult(entry);
+  renderEcwList();
+  showToast(`📅 ตั้งวันสอบ "${name}" แล้ว!`);
+}
+
+function ecwShowResult(entry) {
+  const diff = new Date(entry.datetime) - new Date();
+  const days = Math.ceil(diff / 86400000);
+  const totalH = Math.floor(diff / 3600000);
+  const totalMin = Math.floor(diff / 60000);
+  document.getElementById('ecwResult').style.display = 'block';
+  document.getElementById('ecwResultName').innerHTML = `📌 ${entry.name}`;
+  if (diff <= 0) {
+    document.getElementById('ecwResultDays').textContent = 'ผ่านแล้ว';
+    document.getElementById('ecwResultDays').style.color = 'var(--danger)';
+    document.getElementById('ecwResultSub').textContent = '';
+  } else {
+    document.getElementById('ecwResultDays').textContent = days;
+    document.getElementById('ecwResultDays').style.color = 'var(--primary)';
+    document.getElementById('ecwResultSub').textContent = `${String(totalH).replace(/\B(?=(\d{3})+(?!\d))/g,',')} ชั่วโมง (${String(totalMin).replace(/\B(?=(\d{3})+(?!\d))/g,',')} นาที)`;
+  }
+}
+
+function renderEcwList() {
+  const el = document.getElementById('ecwSavedList');
+  if (!el) return;
+  if (!ecwCountdowns.length) { el.innerHTML = ''; return; }
+  el.innerHTML = ecwCountdowns.map(e => {
+    const diff = Math.ceil((new Date(e.datetime) - new Date()) / 86400000);
+    const daysText = diff > 0 ? diff : diff === 0 ? 'วันนี้' : 'ผ่านแล้ว';
+    const color = diff > 30 ? 'var(--primary)' : diff > 7 ? '#e17055' : 'var(--danger)';
+    return `<div class="ecw-saved-item" onclick="ecwShowResult(${JSON.stringify(e).replace(/"/g,'&quot;')})">
+      <span class="ecw-si-days" style="color:${color}">${daysText}</span>
+      <span class="ecw-si-name">${e.name}</span>
+      <span style="font-size:11px;color:var(--text-muted)">${new Date(e.datetime).toLocaleDateString('th-TH')}</span>
+      <span class="ecw-si-del" onclick="event.stopPropagation();ecwDelete('${e.id}')">✕</span>
+    </div>`;
+  }).join('');
+}
+
+function ecwDelete(id) {
+  ecwCountdowns = ecwCountdowns.filter(e => e.id !== id);
+  ecwSave();
+  renderEcwList();
+  if (!ecwCountdowns.length) document.getElementById('ecwResult').style.display = 'none';
+}
+
+// ===== FOLDERS =====
+let selectedFolderIcon = '📁';
+let selectedFolderColor = '#6c63ff';
+
+function openCreateFolderModal(editId) {
+  selectedFolderIcon = '📁';
+  selectedFolderColor = '#6c63ff';
+  document.getElementById('folderNameInput').value = '';
+  document.getElementById('folderEditId').value = '';
+  document.getElementById('folderDeleteBtn').style.display = 'none';
+
+  // If editing
+  if (editId) {
+    const folder = state.folders.find(f => f.id === editId);
+    if (folder) {
+      document.getElementById('folderNameInput').value = folder.name;
+      document.getElementById('folderEditId').value = editId;
+      document.getElementById('folderDeleteBtn').style.display = 'inline-flex';
+      selectedFolderIcon = folder.icon || '📁';
+      selectedFolderColor = folder.color || '#6c63ff';
+    }
+  }
+
+  // Reset icon picker
+  document.querySelectorAll('.folder-icon-opt').forEach(el => {
+    const isSelected = el.dataset.icon === selectedFolderIcon;
+    el.style.borderColor = isSelected ? 'var(--primary)' : 'var(--border)';
+    el.style.background = isSelected ? 'rgba(108,99,255,0.08)' : 'transparent';
+    el.classList.toggle('selected', isSelected);
+  });
+
+  // Reset color picker
+  document.querySelectorAll('#folderColorPicker .color-dot').forEach(el => {
+    el.classList.toggle('selected', el.dataset.color === selectedFolderColor);
+  });
+
+  // Setup icon picker clicks
+  document.querySelectorAll('.folder-icon-opt').forEach(el => {
+    el.onclick = () => {
+      selectedFolderIcon = el.dataset.icon;
+      document.querySelectorAll('.folder-icon-opt').forEach(o => {
+        o.style.borderColor = 'var(--border)';
+        o.style.background = 'transparent';
+      });
+      el.style.borderColor = 'var(--primary)';
+      el.style.background = 'rgba(108,99,255,0.08)';
+    };
+  });
+
+  // Setup folder color picker
+  document.querySelectorAll('#folderColorPicker .color-dot').forEach(el => {
+    el.onclick = () => {
+      selectedFolderColor = el.dataset.color;
+      document.querySelectorAll('#folderColorPicker .color-dot').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    };
+  });
+
+  openModal('folderModal');
+}
+
+function saveFolder() {
+  const name = document.getElementById('folderNameInput').value.trim();
+  if (!name) { showToast('⚠️ กรุณาใส่ชื่อโฟล์เดอร์', 'warning'); return; }
+  const editId = document.getElementById('folderEditId').value;
+  const folder = {
+    id: editId || uid(),
+    name,
+    icon: selectedFolderIcon,
+    color: selectedFolderColor,
+    createdAt: new Date().toISOString()
+  };
+  if (!state.folders) state.folders = [];
+  const idx = state.folders.findIndex(f => f.id === folder.id);
+  if (idx >= 0) state.folders[idx] = folder;
+  else state.folders.push(folder);
+  saveState();
+  closeModal();
+  renderFilePage();
+  showToast(`✅ ${editId ? 'แก้ไข' : 'สร้าง'}โฟล์เดอร์ "${name}" แล้ว!`);
+}
+
+function deleteFolder() {
+  const editId = document.getElementById('folderEditId').value;
+  if (!editId) return;
+  if (!confirm('ลบโฟล์เดอร์นี้? ไฟล์ในโฟล์เดอร์จะถูกย้ายไปยัง "ทั้งหมด"')) return;
+  // Unassign files in this folder
+  state.files = state.files.map(f => f.folderId === editId ? { ...f, folderId: null } : f);
+  state.folders = state.folders.filter(f => f.id !== editId);
+  if (currentFolderId === editId) currentFolderId = null;
+  saveState();
+  closeModal();
+  renderFilePage();
+  showToast('🗑️ ลบโฟล์เดอร์แล้ว');
+}
+
+function navigateToFolder(folderId) {
+  currentFolderId = folderId;
+  renderFilePage();
+}
+
+function openMoveFileModal(fileId, fileName) {
+  document.getElementById('moveFileId').value = fileId;
+  document.getElementById('moveFileNameLabel').textContent = `ไฟล์: ${fileName}`;
+  const list = document.getElementById('moveFolderList');
+  const file = state.files.find(f => f.id === fileId);
+  const folders = state.folders || [];
+
+  let html = `<div class="folder-item" onclick="assignFileToFolder('${fileId}', null)">
+    <div class="folder-item-icon">📁</div>
+    <div class="folder-item-info">
+      <div class="folder-item-name">ทั้งหมด (ไม่จัดกลุ่ม)</div>
+    </div>
+    ${!file?.folderId ? '<span style="color:var(--success);font-weight:700">✓ ปัจจุบัน</span>' : ''}
+  </div>`;
+
+  html += folders.map(folder => `
+    <div class="folder-item" onclick="assignFileToFolder('${fileId}', '${folder.id}')">
+      <div class="folder-item-icon" style="color:${folder.color}">${folder.icon}</div>
+      <div class="folder-item-info">
+        <div class="folder-item-name">${folder.name}</div>
+      </div>
+      ${file?.folderId === folder.id ? '<span style="color:var(--success);font-weight:700">✓ ปัจจุบัน</span>' : ''}
+    </div>
+  `).join('');
+
+  list.innerHTML = html;
+  openModal('moveFileModal');
+}
+
+function assignFileToFolder(fileId, folderId) {
+  const fileIdx = state.files.findIndex(f => f.id === fileId);
+  if (fileIdx >= 0) {
+    state.files[fileIdx] = { ...state.files[fileIdx], folderId: folderId || null };
+    saveState();
+    closeModal();
+    renderFilePage();
+    const folderName = folderId ? (state.folders.find(f => f.id === folderId)?.name || '') : 'ทั้งหมด';
+    showToast(`📁 ย้ายไฟล์ไปยัง "${folderName}" แล้ว`);
+  }
+}
+
+function renderFilePage() {
+  renderFolderTabs();
+  renderFolderGrid();
+  renderFileList();
+  renderBreadcrumb();
+}
+
+function renderBreadcrumb() {
+  const el = document.getElementById('folderBreadcrumb');
+  if (!el) return;
+  if (!currentFolderId) {
+    el.innerHTML = '<span style="color:var(--text-muted)">📁 ทั้งหมด</span>';
+  } else {
+    const folder = (state.folders || []).find(f => f.id === currentFolderId);
+    el.innerHTML = `<span onclick="navigateToFolder(null)" style="cursor:pointer;color:var(--primary)">📁 ทั้งหมด</span>
+      <span class="sep">›</span>
+      <span style="color:var(--text)">${folder ? folder.icon + ' ' + folder.name : '?'}</span>`;
+  }
+}
+
+function renderFolderTabs() {
+  const el = document.getElementById('folderTabs');
+  if (!el) return;
+  const folders = state.folders || [];
+  const allCount = state.files.filter(f => !f.folderId).length;
+  let html = `<button class="folder-tab ${!currentFolderId ? 'active' : ''}" onclick="navigateToFolder(null)">
+    📁 ทั้งหมด <span class="folder-count">${state.files.length}</span>
+  </button>`;
+  html += folders.map(folder => {
+    const count = state.files.filter(f => f.folderId === folder.id).length;
+    return `<button class="folder-tab ${currentFolderId === folder.id ? 'active' : ''}" onclick="navigateToFolder('${folder.id}')" style="${currentFolderId === folder.id ? '' : 'border-color:' + folder.color + '33;'}">
+      <span style="color:${currentFolderId === folder.id ? '#fff' : folder.color}">${folder.icon}</span> ${folder.name}
+      <span class="folder-count">${count}</span>
+    </button>`;
+  }).join('');
+  el.innerHTML = html;
+}
+
+function renderFolderGrid() {
+  const el = document.getElementById('folderGrid');
+  if (!el) return;
+  // Only show folder grid at root level when there are folders
+  if (currentFolderId || !state.folders || !state.folders.length) {
+    el.innerHTML = '';
+    return;
+  }
+  el.innerHTML = state.folders.map(folder => {
+    const count = state.files.filter(f => f.folderId === folder.id).length;
+    return `<div class="folder-item" onclick="navigateToFolder('${folder.id}')">
+      <div class="folder-item-icon" style="filter:drop-shadow(0 2px 4px ${folder.color}66)">${folder.icon}</div>
+      <div class="folder-item-info">
+        <div class="folder-item-name">${folder.name}</div>
+        <div class="folder-item-meta">${count} ไฟล์</div>
+      </div>
+      <div class="folder-item-actions">
+        <button class="btn btn-sm btn-outline" onclick="event.stopPropagation();openCreateFolderModal('${folder.id}')" style="padding:4px 8px;font-size:11px">✏️</button>
+      </div>
+    </div>`;
+  }).join('') + (state.folders.length ? '<div style="height:12px"></div>' : '');
+}
+
+// ===== LINKS =====
+function addLink() {
+  const url = document.getElementById('linkInput').value.trim();
+  const label = document.getElementById('linkLabelInput').value.trim();
+  if (!url) return;
+  state.links.push({ id: uid(), url, label: label || url });
+  document.getElementById('linkInput').value = '';
+  document.getElementById('linkLabelInput').value = '';
+  saveState();
+  renderLinkList();
+  showToast('✅ เพิ่มลิงก์แล้ว!');
+}
+
+function renderLinkList() {
+  const el = document.getElementById('linkList');
+  if (!state.links.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--text-muted);padding:8px 0">ยังไม่มีลิงก์</div>';
+    return;
+  }
+  el.innerHTML = state.links.map(l => `
+    <div class="file-item">
+      <div class="file-icon">🔗</div>
+      <div class="file-name"><a href="${l.url}" target="_blank" style="color:var(--primary);text-decoration:none">${l.label}</a></div>
+      <div class="file-delete" onclick="deleteLink('${l.id}')">✕</div>
+    </div>
+  `).join('');
+}
+
+function deleteLink(id) {
+  state.links = state.links.filter(l => l.id !== id);
+  saveState();
+  renderLinkList();
+}
+
+// ===== NOTES =====
+function renderNotes() {
+  const el = document.getElementById('notesGrid');
+  if (!state.notes.length) {
+    el.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📝</div><div class="empty-state-text">ยังไม่มีบันทึก</div></div>`;
+    return;
+  }
+  el.innerHTML = state.notes.map(n => `
+    <div class="note-card" onclick="editNote('${n.id}')">
+      <div class="note-title">${n.title||'ไม่มีชื่อ'}</div>
+      <div class="note-preview">${(n.content||'').slice(0,100)}${(n.content||'').length>100?'...':''}</div>
+      <div class="note-date">${n.date||''}</div>
+    </div>
+  `).join('');
+}
+
+function openNoteModal() {
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteContent').value = '';
+  document.getElementById('noteEditId').value = '';
+  openModal('noteModal');
+}
+
+function editNote(id) {
+  const n = state.notes.find(x => x.id === id);
+  if (!n) return;
+  document.getElementById('noteTitle').value = n.title || '';
+  document.getElementById('noteContent').value = n.content || '';
+  document.getElementById('noteEditId').value = id;
+  openModal('noteModal');
+}
+
+function saveNote() {
+  const id = document.getElementById('noteEditId').value || uid();
+  const note = {
+    id,
+    title: document.getElementById('noteTitle').value,
+    content: document.getElementById('noteContent').value,
+    date: new Date().toLocaleDateString('th-TH')
+  };
+  const idx = state.notes.findIndex(n => n.id === id);
+  if (idx >= 0) state.notes[idx] = note;
+  else state.notes.push(note);
+  saveState();
+  renderNotes();
+  closeNoteModal();
+  showToast('✅ บันทึกแล้ว!');
+}
+
+// ===== MODALS =====
+function openModal(id) {
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+}
+
+function closeSubjectModal() { closeModal(); }
+function closeNoteModal() { closeModal(); }
+
+// ===== TOAST =====
+function showToast(msg, type='success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  if (type === 'warning') toast.style.background = '#f9ca24';
+  if (type === 'danger') toast.style.background = 'var(--danger)';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    toast.style.transition = 'all 0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// ===== INSTALL (PWA) =====
+function setupInstallPrompt() {
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredInstall = e;
+    document.getElementById('installBanner').style.display = 'flex';
+  });
+  window.addEventListener('appinstalled', () => {
+    document.getElementById('installBanner').style.display = 'none';
+    showToast('🎉 ติดตั้งแอปสำเร็จ!');
+  });
+}
+
+function doInstall() {
+  if (deferredInstall) {
+    deferredInstall.prompt();
+    deferredInstall.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') showToast('🎉 ติดตั้งแอปสำเร็จ!');
+      deferredInstall = null;
+    });
+  } else {
+    showInstallHelp();
+  }
+}
+
+function showInstallHelp() {
+  showPage('settings');
+}
+
+// ===== RESET =====
+async function resetAll() {
+  if (!confirm('⚠️ ยืนยันลบข้อมูลทั้งหมด? ไม่สามารถกู้คืนได้!')) return;
+  if (!confirm('❗ แน่ใจ 100%?')) return;
+  localStorage.removeItem('examApp_state');
+  // Clear IndexedDB files
+  if (db) {
+    const tx = db.transaction('files', 'readwrite');
+    tx.objectStore('files').clear();
+  }
+  state = { exam:{name:'',date:'',location:'',org:'',note:''}, plans:[], subjects:[], files:[], links:[], notes:[], timeblocks:[], folders:[] };
+  renderAll();
+  renderPlanTable();
+  renderSubjectList();
+  renderFileList();
+  renderNotes();
+  syncSettingsForm();
+  showToast('🗑️ ล้างข้อมูลทั้งหมดแล้ว');
+}
+
+// ===== HELPERS =====
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+// ===== PWA MANIFEST (inline) =====
+function createManifest() {
+  const manifest = {
+    name: 'พิชิตสนามสอบ',
+    short_name: 'สนามสอบ',
+    description: 'แผนอ่านหนังสือพิชิตสนามสอบ',
+    start_url: './',
+    display: 'standalone',
+    background_color: '#1a1a2e',
+    theme_color: '#6c63ff',
+    orientation: 'any',
+    icons: [
+      { src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="40" fill="%236c63ff"/><text y="140" font-size="120" text-anchor="middle" x="96">📚</text></svg>', sizes: '192x192', type: 'image/svg+xml' },
+      { src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="80" fill="%236c63ff"/><text y="380" font-size="320" text-anchor="middle" x="256">📚</text></svg>', sizes: '512x512', type: 'image/svg+xml' }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+  const url = URL.createObjectURL(blob);
+  document.getElementById('manifest-link').href = url;
+}
+
+// ===== SERVICE WORKER =====
+function registerSW() {
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+const CACHE='examapp-v1';
+const URLS=['./'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(URLS))));
+self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./')))));
+    `;
+    const blob = new Blob([swCode], {type:'application/javascript'});
+    const url = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url).catch(()=>{});
+  }
+}
+
+// ===== ANALYTICS =====
+function renderAnalytics() {
+  const logs = state.goalLogs || [];
+  const plans = state.plans || [];
+  const subjects = state.subjects || [];
+
+  // Stats cards
+  const totalHrs = logs.reduce((s,l)=>s+(+l.hrs||0),0);
+  const today = new Date().toISOString().split('T')[0];
+  const todayHrs = logs.filter(l=>l.date===today).reduce((s,l)=>s+(+l.hrs||0),0);
+  const doneCount = plans.filter(p=>p.status==='done').length;
+  const streak = calcStreak(logs);
+  document.getElementById('analyticsStats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">⏱️ ชั่วโมงรวมทั้งหมด</div><div class="stat-value">${totalHrs.toFixed(1)}</div><div class="stat-sub">ชั่วโมง</div></div>
+    <div class="stat-card"><div class="stat-label">📅 วันนี้</div><div class="stat-value" style="color:var(--accent2)">${todayHrs.toFixed(1)}</div><div class="stat-sub">ชั่วโมง</div></div>
+    <div class="stat-card"><div class="stat-label">✅ แผนเสร็จแล้ว</div><div class="stat-value" style="color:var(--success)">${doneCount}</div><div class="stat-sub">รายการ</div></div>
+    <div class="stat-card"><div class="stat-label">🔥 Streak</div><div class="stat-value" style="color:#e17055">${streak}</div><div class="stat-sub">วันติดต่อกัน</div></div>
+  `;
+
+  // Bar chart - last 7 days
+  const days = [];
+  for(let i=6;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().split('T')[0];
+    const hrs = logs.filter(l=>l.date===ds).reduce((s,l)=>s+(+l.hrs||0),0);
+    days.push({ds, hrs, label: ['อา','จ','อ','พ','พฤ','ศ','ส'][d.getDay()]});
+  }
+  const maxH = Math.max(...days.map(d=>d.hrs), 1);
+  document.getElementById('analyticsBarChart').innerHTML = days.map(d=>{
+    const pct = (d.hrs/maxH*100).toFixed(1);
+    const isToday = d.ds === today;
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%">
+      <div style="font-size:10px;color:var(--text-muted);font-weight:600">${d.hrs>0?d.hrs.toFixed(1):''}</div>
+      <div style="flex:1;width:100%;display:flex;align-items:flex-end">
+        <div style="width:100%;height:${pct}%;background:${isToday?'var(--primary)':'rgba(108,99,255,0.35)'};border-radius:6px 6px 0 0;min-height:${d.hrs>0?'4px':'0'}"></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:${isToday?'var(--primary)':'var(--text-muted)'}">${d.label}</div>
+    </div>`;
+  }).join('');
+
+  // Subject breakdown
+  const subjectHrs = {};
+  logs.forEach(l=>{ if(l.subject) subjectHrs[l.subject] = (subjectHrs[l.subject]||0)+(+l.hrs||0); });
+  const maxSH = Math.max(...Object.values(subjectHrs), 0.1);
+  const COLORS = ['#6c63ff','#ff6584','#43e97b','#f9ca24','#74b9ff','#fd79a8','#00cec9','#e17055'];
+  document.getElementById('analyticsSubjectBars').innerHTML = Object.entries(subjectHrs).sort((a,b)=>b[1]-a[1]).map(([s,h],i)=>`
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+        <span style="font-weight:600">${s}</span><span style="color:var(--text-muted)">${h.toFixed(1)} ชม.</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${(h/maxSH*100).toFixed(0)}%;background:${COLORS[i%COLORS.length]}"></div></div>
+    </div>
+  `).join('') || '<div style="color:var(--text-muted);font-size:13px">ยังไม่มีข้อมูล ไปบันทึกชั่วโมงที่ "เป้าหมายรายวัน" ก่อน</div>';
+
+  // Streak display
+  document.getElementById('analyticsStreak').innerHTML = `
+    <div style="font-size:48px;text-align:center;margin:8px 0">🔥</div>
+    <div style="text-align:center;font-family:var(--font-head);font-size:36px;font-weight:800;color:#e17055">${streak}</div>
+    <div style="text-align:center;font-size:14px;color:var(--text-muted);margin-top:4px">วันที่อ่านหนังสือติดต่อกัน</div>
+  `;
+}
+
+function calcStreak(logs) {
+  let streak = 0;
+  const d = new Date();
+  while(true) {
+    const ds = d.toISOString().split('T')[0];
+    if(logs.some(l=>l.date===ds && +l.hrs>0)) { streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return streak;
+}
+
+// ===== QUIZ =====
+let quizQueue = [], quizIndex = 0, quizCorrect = 0;
+
+function renderQuizPage() {
+  const filter = document.getElementById('quizFilterSubject').value;
+  const items = (state.quizItems||[]).filter(q=>!filter||q.subject===filter);
+
+  // Update filter dropdown
+  const subjects = [...new Set((state.quizItems||[]).map(q=>q.subject).filter(Boolean))];
+  const sel = document.getElementById('quizFilterSubject');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— ทุกวิชา —</option>' + subjects.map(s=>`<option value="${s}" ${s===cur?'selected':''}>${s}</option>`).join('');
+
+  document.getElementById('quizList').innerHTML = items.length ? items.map(q=>`
+    <div class="file-item" style="flex-direction:column;align-items:flex-start;gap:6px;cursor:pointer" onclick="editQuizItem('${q.id}')">
+      <div style="display:flex;justify-content:space-between;width:100%">
+        <span class="tag tag-primary">${q.subject||'ไม่มีวิชา'}</span>
+        <span style="font-size:11px;color:var(--text-muted)">${q.correct||0}/${q.tried||0} ถูก</span>
+      </div>
+      <div style="font-weight:600;font-size:13px">${q.question}</div>
+    </div>
+  `).join('') : '<div class="empty-state"><div class="empty-state-icon">❓</div><div class="empty-state-text">ยังไม่มีข้อ Q&A กดปุ่ม "+ เพิ่มข้อ Q&A"</div></div>';
+}
+
+function openQuizAddModal() {
+  document.getElementById('quizSubjectInput').value = '';
+  document.getElementById('quizQuestionInput').value = '';
+  document.getElementById('quizAnswerInput').value = '';
+  document.getElementById('quizEditId').value = '';
+  document.getElementById('quizDeleteBtn').style.display = 'none';
+  openModal('quizModal');
+}
+
+function editQuizItem(id) {
+  const q = (state.quizItems||[]).find(x=>x.id===id);
+  if(!q) return;
+  document.getElementById('quizSubjectInput').value = q.subject||'';
+  document.getElementById('quizQuestionInput').value = q.question||'';
+  document.getElementById('quizAnswerInput').value = q.answer||'';
+  document.getElementById('quizEditId').value = id;
+  document.getElementById('quizDeleteBtn').style.display = 'inline-flex';
+  openModal('quizModal');
+}
+
+function saveQuiz() {
+  const id = document.getElementById('quizEditId').value || uid();
+  const item = {
+    id,
+    subject: document.getElementById('quizSubjectInput').value.trim(),
+    question: document.getElementById('quizQuestionInput').value.trim(),
+    answer: document.getElementById('quizAnswerInput').value.trim()
+  };
+  if(!item.question) return showToast('⚠️ กรุณากรอกคำถาม','warning');
+  if(!state.quizItems) state.quizItems = [];
+  const idx = state.quizItems.findIndex(x=>x.id===id);
+  if(idx>=0) state.quizItems[idx] = {...state.quizItems[idx],...item};
+  else state.quizItems.push(item);
+  saveState(); closeModal(); renderQuizPage();
+  showToast('✅ บันทึกข้อ Q&A แล้ว!');
+}
+
+function deleteQuiz() {
+  const id = document.getElementById('quizEditId').value;
+  state.quizItems = (state.quizItems||[]).filter(x=>x.id!==id);
+  saveState(); closeModal(); renderQuizPage();
+  showToast('🗑️ ลบแล้ว');
+}
+
+function startQuiz() {
+  const filter = document.getElementById('quizFilterSubject').value;
+  const pool = (state.quizItems||[]).filter(q=>!filter||q.subject===filter);
+  if(!pool.length) return showToast('⚠️ ยังไม่มีข้อ Q&A','warning');
+  quizQueue = [...pool].sort(()=>Math.random()-0.5);
+  quizIndex = 0; quizCorrect = 0;
+  document.getElementById('quizListArea').style.display = 'none';
+  document.getElementById('quizModeArea').style.display = 'block';
+  document.getElementById('quizSummary').style.display = 'none';
+  document.getElementById('quizCard').style.display = 'block';
+  showQuizItem();
+}
+
+function showQuizItem() {
+  const q = quizQueue[quizIndex];
+  document.getElementById('quizProgress').textContent = `ข้อ ${quizIndex+1}/${quizQueue.length}`;
+  document.getElementById('quizQuestion').textContent = q.question;
+  document.getElementById('quizAnswer').style.display = 'none';
+  document.getElementById('quizBtns').style.display = 'none';
+  document.getElementById('quizBtns').style.display = 'none';
+}
+
+function revealAnswer() {
+  const q = quizQueue[quizIndex];
+  document.getElementById('quizAnswer').textContent = q.answer;
+  document.getElementById('quizAnswer').style.display = 'block';
+  document.getElementById('quizBtns').style.display = 'flex';
+}
+
+function quizResult(correct) {
+  const q = quizQueue[quizIndex];
+  const item = (state.quizItems||[]).find(x=>x.id===q.id);
+  if(item) { item.tried=(item.tried||0)+1; if(correct) item.correct=(item.correct||0)+1; }
+  if(correct) quizCorrect++;
+  quizIndex++;
+  if(quizIndex < quizQueue.length) { showQuizItem(); }
+  else {
+    saveState();
+    document.getElementById('quizCard').style.display = 'none';
+    document.getElementById('quizSummary').style.display = 'block';
+    const pct = Math.round(quizCorrect/quizQueue.length*100);
+    document.getElementById('quizSummary').innerHTML = `
+      <div class="section-card" style="text-align:center">
+        <div style="font-size:48px;margin-bottom:8px">${pct>=80?'🎉':pct>=50?'👍':'💪'}</div>
+        <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--primary)">${pct}%</div>
+        <div style="margin:8px 0;color:var(--text-muted)">ตอบถูก ${quizCorrect} / ${quizQueue.length} ข้อ</div>
+        <button class="btn btn-primary" onclick="endQuiz()" style="margin-top:12px">✅ เสร็จสิ้น</button>
+      </div>`;
+  }
+}
+
+function endQuiz() {
+  document.getElementById('quizListArea').style.display = 'block';
+  document.getElementById('quizModeArea').style.display = 'none';
+  renderQuizPage();
+}
+
+// ===== REMINDER =====
+function renderReminderPage() {
+  const reminders = state.reminders || [];
+  const note = document.getElementById('reminderPermNote');
+  if('Notification' in window) {
+    if(Notification.permission === 'granted') note.textContent = '✅ อนุญาตการแจ้งเตือนแล้ว';
+    else if(Notification.permission === 'denied') note.textContent = '❌ บราวเซอร์ปิดกั้นการแจ้งเตือน กรุณาเปิดสิทธิ์ในการตั้งค่าบราวเซอร์';
+    else note.innerHTML = '⚠️ <a href="#" onclick="Notification.requestPermission().then(renderReminderPage)" style="color:var(--primary)">คลิกเพื่ออนุญาตการแจ้งเตือน</a>';
+  } else {
+    note.textContent = '⚠️ บราวเซอร์นี้ไม่รองรับการแจ้งเตือน';
+  }
+
+  const el = document.getElementById('reminderList');
+  const repeatLabel = {once:'ครั้งเดียว', daily:'ทุกวัน', weekdays:'จ–ศ'};
+  el.innerHTML = reminders.length ? reminders.map(r=>`
+    <div class="file-item">
+      <div class="file-icon">🔔</div>
+      <div class="file-name">
+        <div style="font-weight:600">${r.msg}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${r.time} · ${repeatLabel[r.repeat]||''}</div>
+      </div>
+      <div class="file-delete" onclick="deleteReminder('${r.id}')">✕</div>
+    </div>
+  `).join('') : '<div style="font-size:13px;color:var(--text-muted)">ยังไม่มีการแจ้งเตือน</div>';
+}
+
+function addReminder() {
+  const msg = document.getElementById('reminderMsg').value.trim();
+  const time = document.getElementById('reminderTime').value;
+  const repeat = document.getElementById('reminderRepeat').value;
+  if(!msg||!time) return showToast('⚠️ กรุณากรอกข้อความและเวลา','warning');
+  if(!state.reminders) state.reminders = [];
+  state.reminders.push({id:uid(), msg, time, repeat});
+  saveState(); renderReminderPage(); scheduleReminders();
+  document.getElementById('reminderMsg').value='';
+  document.getElementById('reminderTime').value='';
+  showToast('✅ ตั้งการแจ้งเตือนแล้ว!');
+}
+
+function deleteReminder(id) {
+  state.reminders = (state.reminders||[]).filter(r=>r.id!==id);
+  saveState(); renderReminderPage();
+}
+
+function scheduleReminders() {
+  // Check every minute
+  if(window._reminderInterval) clearInterval(window._reminderInterval);
+  window._reminderInterval = setInterval(()=>{
+    if(!state.reminders||!state.reminders.length) return;
+    const now = new Date();
+    const hhmm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const dayOfWeek = now.getDay();
+    state.reminders.forEach(r=>{
+      if(r.time !== hhmm) return;
+      const lastFired = r._lastFired;
+      const todayKey = now.toISOString().split('T')[0];
+      if(lastFired === todayKey) return;
+      if(r.repeat==='weekdays' && (dayOfWeek===0||dayOfWeek===6)) return;
+      r._lastFired = todayKey;
+      if('Notification' in window && Notification.permission==='granted') {
+        new Notification('📚 พิชิตสนามสอบ', {body: r.msg, icon: ''});
+      }
+      showToast('🔔 ' + r.msg);
+      if(r.repeat==='once') {
+        state.reminders = state.reminders.filter(x=>x.id!==r.id);
+        saveState(); renderReminderPage();
+      }
+    });
+  }, 30000);
+}
+
+// ===== POMODORO =====
+let pomMode = 'work', pomTimer = null, pomSeconds = 25*60, pomRunning = false;
+let pomDoneRounds = 0;
+const pomSettings = {work:25, short:5, long:15};
+
+function initPomodoro() {
+  pomApplySettings();
+  renderPomRounds();
+  renderPomHistory();
+}
+
+function pomApplySettings() {
+  pomSettings.work = parseInt(document.getElementById('pomWorkMin').value)||25;
+  pomSettings.short = parseInt(document.getElementById('pomShortMin').value)||5;
+  pomSettings.long = parseInt(document.getElementById('pomLongMin').value)||15;
+  if(!pomRunning) { pomSetMode(pomMode, true); }
+}
+
+function pomSetMode(mode, silent=false) {
+  pomMode = mode;
+  ['work','short','long'].forEach(m=>{
+    document.getElementById(`pomTab${m.charAt(0).toUpperCase()+m.slice(1)}`).classList.toggle('active', m===mode);
+  });
+  if(!pomRunning) {
+    const mins = {work:pomSettings.work, short:pomSettings.short, long:pomSettings.long};
+    pomSeconds = mins[mode]*60;
+    pomUpdateDisplay();
+    const labels = {work:`โฟกัส ${pomSettings.work} นาที · พักสั้นทุก 4 รอบ`, short:`พักสั้น ${pomSettings.short} นาที`, long:`พักยาว ${pomSettings.long} นาที`};
+    document.getElementById('pomLabel').textContent = labels[mode];
+  }
+}
+
+function pomToggle() {
+  if(pomRunning) {
+    pomRunning = false; clearInterval(pomTimer);
+    document.getElementById('pomStartBtn').textContent = '▶ ต่อ';
+  } else {
+    pomRunning = true;
+    pomTimer = setInterval(()=>{
+      pomSeconds--;
+      pomUpdateDisplay();
+      if(pomSeconds <= 0) {
+        clearInterval(pomTimer); pomRunning = false;
+        pomDone();
+      }
+    }, 1000);
+    document.getElementById('pomStartBtn').textContent = '⏸ หยุดชั่วคราว';
+  }
+}
+
+function pomUpdateDisplay() {
+  const m = String(Math.floor(pomSeconds/60)).padStart(2,'0');
+  const s = String(pomSeconds%60).padStart(2,'0');
+  document.getElementById('pomDisplay').textContent = `${m}:${s}`;
+}
+
+function pomReset() {
+  clearInterval(pomTimer); pomRunning = false;
+  document.getElementById('pomStartBtn').textContent = '▶ เริ่ม';
+  pomSetMode(pomMode, true);
+}
+
+function pomDone() {
+  document.getElementById('pomStartBtn').textContent = '▶ เริ่ม';
+  if(pomMode === 'work') {
+    pomDoneRounds++;
+    if(!state.pomHistory) state.pomHistory=[];
+    state.pomHistory.push({date:new Date().toISOString().split('T')[0], mins:pomSettings.work, ts:Date.now()});
+    saveState(); renderPomHistory(); renderPomRounds();
+    showToast(`🍅 รอบที่ ${pomDoneRounds} เสร็จแล้ว! พักได้`);
+    if('Notification' in window && Notification.permission==='granted')
+      new Notification('🍅 Pomodoro เสร็จ!', {body:'ถึงเวลาพักแล้ว'});
+    if(pomDoneRounds%4===0) pomSetMode('long');
+    else pomSetMode('short');
+  } else {
+    showToast('☕ พักเสร็จแล้ว! กลับมาโฟกัสกัน');
+    pomSetMode('work');
+  }
+}
+
+function renderPomRounds() {
+  const today = new Date().toISOString().split('T')[0];
+  const todayRounds = (state.pomHistory||[]).filter(h=>h.date===today).length;
+  let html = '';
+  for(let i=0;i<8;i++) {
+    html += `<span style="font-size:20px">${i<todayRounds?'🍅':'⭕'}</span>`;
+  }
+  document.getElementById('pomRounds').innerHTML = html + `<span style="font-size:12px;color:var(--text-muted);margin-left:6px">${todayRounds} รอบวันนี้</span>`;
+}
+
+function renderPomHistory() {
+  const today = new Date().toISOString().split('T')[0];
+  const todayH = (state.pomHistory||[]).filter(h=>h.date===today);
+  const totalMins = todayH.reduce((s,h)=>s+(h.mins||25),0);
+  document.getElementById('pomHistory').innerHTML = todayH.length
+    ? `<div style="font-size:13px;color:var(--text-muted)">วันนี้โฟกัสไปแล้ว <strong style="color:var(--primary)">${todayH.length} รอบ</strong> รวม <strong style="color:var(--primary)">${totalMins} นาที</strong></div>`
+    + todayH.slice(-5).reverse().map(h=>`<div class="file-item" style="margin-top:6px"><div class="file-icon">🍅</div><div class="file-name">${pomSettings.work||h.mins} นาที</div><div class="file-size">${new Date(h.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')
+    : '<div style="font-size:13px;color:var(--text-muted)">ยังไม่มีประวัติวันนี้</div>';
+}
+
+// ===== GOALS =====
+function renderGoalsPage() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('goalDateInput').value = today;
+  const target = state.goalTarget || 4;
+  document.getElementById('goalHoursInput').value = target;
+
+  const logs = (state.goalLogs||[]);
+  const todayHrs = logs.filter(l=>l.date===today).reduce((s,l)=>s+(+l.hrs||0),0);
+  const pct = Math.min(100, Math.round(todayHrs/target*100));
+  const offset = 314 * (1 - pct/100);
+  document.getElementById('goalPct').textContent = pct+'%';
+  document.getElementById('goalHrsDone').textContent = todayHrs.toFixed(1)+' ชม.';
+  document.getElementById('goalCircleBar').setAttribute('stroke-dashoffset', offset);
+
+  // Log list
+  const todayLogs = logs.filter(l=>l.date===today).reverse();
+  document.getElementById('goalLogList').innerHTML = todayLogs.length
+    ? todayLogs.map(l=>`
+      <div class="file-item">
+        <div class="file-icon">📖</div>
+        <div class="file-name"><div style="font-weight:600">${l.subject||'ไม่ระบุวิชา'}</div><div style="font-size:11px;color:var(--text-muted)">${l.date}</div></div>
+        <div class="file-size">${l.hrs} ชม.</div>
+        <div class="file-delete" onclick="deleteGoalLog('${l.id}')">✕</div>
+      </div>`).join('')
+    : '<div style="font-size:13px;color:var(--text-muted)">ยังไม่มีบันทึกวันนี้</div>';
+
+  // Weekly chart
+  const days = [];
+  for(let i=6;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().split('T')[0];
+    const hrs = logs.filter(l=>l.date===ds).reduce((s,l)=>s+(+l.hrs||0),0);
+    days.push({ds, hrs, label:['อา','จ','อ','พ','พฤ','ศ','ส'][d.getDay()]});
+  }
+  const maxH = Math.max(...days.map(d=>d.hrs), target, 0.1);
+  document.getElementById('goalWeekChart').innerHTML = days.map(d=>{
+    const isToday = d.ds === today;
+    const pctH = (d.hrs/maxH*100).toFixed(1);
+    const reachGoal = d.hrs >= target;
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%">
+      <div style="font-size:10px;color:var(--text-muted);font-weight:600">${d.hrs>0?d.hrs.toFixed(1):''}</div>
+      <div style="flex:1;width:100%;display:flex;align-items:flex-end">
+        <div style="width:100%;height:${pctH}%;background:${reachGoal?'var(--success)':isToday?'var(--primary)':'rgba(108,99,255,0.3)'};border-radius:6px 6px 0 0;min-height:${d.hrs>0?'4px':'0'}"></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:${isToday?'var(--primary)':'var(--text-muted)'}">${d.label}</div>
+    </div>`;
+  }).join('');
+}
+
+function saveGoal() {
+  const v = parseFloat(document.getElementById('goalHoursInput').value);
+  if(!v||v<=0) return showToast('⚠️ กรุณากรอกเป้าหมาย','warning');
+  state.goalTarget = v;
+  saveState(); renderGoalsPage();
+  showToast('✅ บันทึกเป้าหมายแล้ว!');
+}
+
+function addGoalLog() {
+  const subject = document.getElementById('goalSubjectInput').value.trim();
+  const hrs = parseFloat(document.getElementById('goalHrsInput').value);
+  const date = document.getElementById('goalDateInput').value;
+  if(!hrs||hrs<=0||!date) return showToast('⚠️ กรุณากรอกชั่วโมงและวันที่','warning');
+  if(!state.goalLogs) state.goalLogs=[];
+  state.goalLogs.push({id:uid(), subject, hrs, date});
+  saveState(); renderGoalsPage();
+  document.getElementById('goalSubjectInput').value='';
+  document.getElementById('goalHrsInput').value='';
+  showToast('✅ บันทึกชั่วโมงแล้ว!');
+}
+
+function deleteGoalLog(id) {
+  state.goalLogs = (state.goalLogs||[]).filter(l=>l.id!==id);
+  saveState(); renderGoalsPage();
+}
+
+// Start reminder scheduler on load
+document.addEventListener('DOMContentLoaded', ()=>{ scheduleReminders(); });
+
+// ===== START =====
+document.addEventListener('DOMContentLoaded', async () => {
+  createManifest();
+  registerSW();
+  await initDB();
+  init();
+  renderFileList();
+  renderLinkList();
+});
+</script>
+</body>
+</html>
